@@ -1,0 +1,436 @@
+<div class="settings-container">
+  <div class="page-header">
+    <h1>Settings</h1>
+  </div>
+
+  <nz-tabset nzType="card" class="settings-tabs">
+    <!-- Company Settings -->
+    <nz-tab nzTitle="Company Information">
+      <nz-card class="settings-card">
+        <!-- <form
+          nz-form
+          [formGroup]="companyForm"
+          (ngSubmit)="saveCompanySettings()"
+        >
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label nzRequired>Company Name</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter company name">
+                  <input
+                    nz-input
+                    formControlName="companyName"
+                    placeholder="Enter company name"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Company Email</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter valid email">
+                  <input
+                    nz-input
+                    formControlName="companyEmail"
+                    placeholder="Enter company email"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Company Phone</nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    formControlName="companyPhone"
+                    placeholder="Enter phone number"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Tax Number</nz-form-label>
+                <nz-form-control>
+                  <input
+                    nz-input
+                    formControlName="taxNumber"
+                    placeholder="Enter tax number"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzSpan="24">
+              <nz-form-item>
+                <nz-form-label nzRequired>Company Address</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter company address">
+                  <textarea
+                    nz-input
+                    formControlName="companyAddress"
+                    placeholder="Enter complete address"
+                    [nzRows]="3"
+                  >
+                  </textarea>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzSpan="24">
+              <nz-form-item>
+                <nz-form-label>Company Logo</nz-form-label>
+                <nz-form-control>
+                  <nz-upload
+                    nzName="logo"
+                    nzListType="picture-card"
+                    [nzShowUploadList]="false"
+                    [nzBeforeUpload]="beforeUpload"
+                    (nzChange)="handleLogoChange($event)"
+                  >
+                    <div class="upload-content">
+                      <img
+                        *ngIf="logoUrl"
+                        [src]="logoUrl"
+                        alt="Company Logo"
+                        class="uploaded-logo"
+                      />
+                      <div *ngIf="!logoUrl" class="upload-placeholder">
+                        <span nz-icon nzType="plus" class="upload-icon"></span>
+                        <div class="upload-text">Upload Logo</div>
+                      </div>
+                    </div>
+                  </nz-upload>
+                  <div class="upload-hint">
+                    <small>Recommended size: 300x100px, Max size: 2MB</small>
+                  </div>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button nz-button nzType="primary" [nzLoading]="saving">
+              <span nz-icon nzType="save"></span>
+              Save Company Settings
+            </button>
+          </div>
+        </form> -->
+      </nz-card>
+    </nz-tab>
+
+    <!-- API Settings -->
+    <nz-tab nzTitle="API Configuration">
+      <nz-card class="settings-card">
+        <!-- <form nz-form [formGroup]="apiForm" (ngSubmit)="saveApiSettings()">
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Third-party API URL</nz-form-label>
+                <nz-form-control nzErrorTip="Please enter valid URL">
+                  <input
+                    nz-input
+                    formControlName="thirdPartyApiUrl"
+                    placeholder="https://api.example.com/webhook"
+                  />
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>API Key</nz-form-label>
+                <nz-form-control>
+                  <nz-input-group nzSuffix>
+                    <input
+                      nz-input
+                      [type]="showApiKey ? 'text' : 'password'"
+                      formControlName="thirdPartyApiKey"
+                      placeholder="Enter your API key"
+                    />
+                    <ng-template #nzSuffix>
+                      <button
+                        nz-button
+                        nzType="text"
+                        nzSize="small"
+                        (click)="showApiKey = !showApiKey"
+                      >
+                        <span
+                          nz-icon
+                          [nzType]="showApiKey ? 'eye-invisible' : 'eye'"
+                        ></span>
+                      </button>
+                    </ng-template>
+                  </nz-input-group>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Timeout (seconds)</nz-form-label>
+                <nz-form-control>
+                  <nz-input-number
+                    formControlName="timeout"
+                    [nzMin]="5"
+                    [nzMax]="60"
+                    nzPlaceHolder="30"
+                    style="width: 100%"
+                  >
+                  </nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Retry Attempts</nz-form-label>
+                <nz-form-control>
+                  <nz-input-number
+                    formControlName="retryAttempts"
+                    [nzMin]="0"
+                    [nzMax]="5"
+                    nzPlaceHolder="3"
+                    style="width: 100%"
+                  >
+                  </nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <nz-divider></nz-divider>
+
+          <div class="test-section">
+            <h3>Test API Connection</h3>
+            <p>Test your API configuration to ensure it's working correctly.</p>
+            <button
+              nz-button
+              nzType="dashed"
+              (click)="testApiConnection()"
+              [nzLoading]="testing"
+            >
+              <span nz-icon nzType="experiment"></span>
+              Test Connection
+            </button>
+          </div>
+
+          <div class="form-actions">
+            <button nz-button nzType="primary" [nzLoading]="saving">
+              <span nz-icon nzType="save"></span>
+              Save API Settings
+            </button>
+          </div>
+        </form> -->
+      </nz-card>
+    </nz-tab>
+
+    <!-- Application Settings -->
+    <nz-tab nzTitle="Application Preferences">
+      <nz-card class="settings-card">
+        <!-- <form nz-form [formGroup]="appForm" (ngSubmit)="saveAppSettings()">
+          <div nz-row [nzGutter]="16">
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Default Invoice Type</nz-form-label>
+                <nz-form-control>
+                  <nz-select
+                    formControlName="defaultInvoiceType"
+                    style="width: 100%"
+                  >
+                    <nz-option
+                      nzValue="Sale Invoice"
+                      nzLabel="Sale Invoice"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="Purchase Invoice"
+                      nzLabel="Purchase Invoice"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="Credit Note"
+                      nzLabel="Credit Note"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="Debit Note"
+                      nzLabel="Debit Note"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Default Currency</nz-form-label>
+                <nz-form-control>
+                  <nz-select
+                    formControlName="defaultCurrency"
+                    style="width: 100%"
+                  >
+                    <nz-option
+                      nzValue="PKR"
+                      nzLabel="Pakistani Rupee (PKR)"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="USD"
+                      nzLabel="US Dollar (USD)"
+                    ></nz-option>
+                    <nz-option nzValue="EUR" nzLabel="Euro (EUR)"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Date Format</nz-form-label>
+                <nz-form-control>
+                  <nz-select formControlName="dateFormat" style="width: 100%">
+                    <nz-option
+                      nzValue="dd/MM/yyyy"
+                      nzLabel="DD/MM/YYYY"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="MM/dd/yyyy"
+                      nzLabel="MM/DD/YYYY"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="yyyy-MM-dd"
+                      nzLabel="YYYY-MM-DD"
+                    ></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Theme</nz-form-label>
+                <nz-form-control>
+                  <nz-select formControlName="theme" style="width: 100%">
+                    <nz-option nzValue="light" nzLabel="Light"></nz-option>
+                    <nz-option nzValue="dark" nzLabel="Dark"></nz-option>
+                    <nz-option nzValue="auto" nzLabel="Auto"></nz-option>
+                  </nz-select>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Auto-save Interval (minutes)</nz-form-label>
+                <nz-form-control>
+                  <nz-input-number
+                    formControlName="autoSaveInterval"
+                    [nzMin]="1"
+                    [nzMax]="30"
+                    nzPlaceHolder="5"
+                    style="width: 100%"
+                  >
+                  </nz-input-number>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div nz-col nzXs="24" nzMd="12">
+              <nz-form-item>
+                <nz-form-label>Enable Notifications</nz-form-label>
+                <nz-form-control>
+                  <nz-switch formControlName="enableNotifications"></nz-switch>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button nz-button nzType="primary" [nzLoading]="saving">
+              <span nz-icon nzType="save"></span>
+              Save App Settings
+            </button>
+          </div>
+        </form> -->
+      </nz-card>
+    </nz-tab>
+
+    <!-- System Information -->
+    <nz-tab nzTitle="System Information">
+      <nz-card class="settings-card">
+        <div class="system-info">
+          <div class="info-section">
+            <h3>Application Information</h3>
+            <div class="info-item">
+              <span class="info-label">Version:</span>
+              <span class="info-value">1.0.0</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Build Date:</span>
+              <!-- <span class="info-value">{{ getBuildDate() }}</span> -->
+            </div>
+            <div class="info-item">
+              <span class="info-label">Environment:</span>
+              <!-- <span class="info-value">{{ getEnvironment() }}</span> -->
+            </div>
+          </div>
+
+          <nz-divider></nz-divider>
+
+          <div class="info-section">
+            <h3>System Health</h3>
+            <div class="health-checks">
+              <div class="health-item">
+                <span
+                  nz-icon
+                  nzType="check-circle"
+                  class="health-icon success"
+                ></span>
+                <span>Database Connection</span>
+                <nz-tag nzColor="green">OK</nz-tag>
+              </div>
+              <div class="health-item">
+                <span
+                  nz-icon
+                  nzType="check-circle"
+                  class="health-icon success"
+                ></span>
+                <span>API Server</span>
+                <nz-tag nzColor="green">OK</nz-tag>
+              </div>
+              <div class="health-item">
+                <span
+                  nz-icon
+                  nzType="exclamation-circle"
+                  class="health-icon warning"
+                ></span>
+                <span>Third-party API</span>
+                <nz-tag nzColor="orange">Not Configured</nz-tag>
+              </div>
+            </div>
+          </div>
+
+          <nz-divider></nz-divider>
+
+          <div class="info-section">
+            <h3>Actions</h3>
+            <div class="action-buttons">
+              <!-- <button nz-button nzType="default" (click)="clearCache()">
+                <span nz-icon nzType="clear"></span>
+                Clear Cache
+              </button>
+              <button nz-button nzType="default" (click)="exportSettings()">
+                <span nz-icon nzType="export"></span>
+                Export Settings
+              </button>
+              <button nz-button nzType="default" (click)="importSettings()">
+                <span nz-icon nzType="import"></span>
+                Import Settings
+              </button> -->
+            </div>
+          </div>
+        </div>
+      </nz-card>
+    </nz-tab>
+  </nz-tabset>
+</div>

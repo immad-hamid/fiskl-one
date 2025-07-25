@@ -1,0 +1,28 @@
+<nz-layout class="app-layout">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+    nzWidth="250px"
+    [nzCollapsedWidth]="80"
+  >
+    <app-sidebar [isCollapsed]="isCollapsed"></app-sidebar>
+  </nz-sider>
+
+  <nz-layout>
+    <nz-header class="app-header">
+      <app-header
+        [isCollapsed]="isCollapsed"
+        (toggleCollapsed)="toggleCollapsed()"
+      >
+      </app-header>
+    </nz-header>
+
+    <nz-content class="app-content">
+      <div class="content-wrapper">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>
