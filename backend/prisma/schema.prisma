@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Invoice {
+  id                    Int      @id @default(autoincrement())
+  invoiceNumber         String   @unique @map("invoice_number")
+  invoiceType           String   @map("invoice_type")
+  invoiceDate           DateTime @map("invoice_date") @db.Date
+  sellerNTNCNIC         String   @map("seller_ntn_cnic")
+  sellerBusinessName    String   @map("seller_business_name")
+  sellerProvince        String   @map("seller_province")
+  sellerAddress         String   @map("seller_address")
+  buyerNTNCNIC          String   @map("buyer_ntn_cnic")
+  buyerBusinessName     String   @map("buyer_business_name")
+  buyerProvince         String   @map("buyer_province")
+  buyerAddress          String   @map("buyer_address")
+  buyerRegistrationType String   @map("buyer_registration_type")
+  invoiceRefNo          String?  @map("invoice_ref_no")
+  scenarioId            String   @map("scenario_id")
+  status                String   @default("pending")
+  totalAmount           Decimal  @map("total_amount") @db.Decimal(15, 2)
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  items InvoiceItem[]
+
+  @@map("invoices")
+}
+
+model InvoiceItem {
+  id                              Int     @id @default(autoincrement())
+  invoiceId                       Int     @map("invoice_id")
+  hsCode                          String  @map("hs_code")
+  productDescription              String  @map("product_description")
+  rate                            String
+  uoM                             String  @map("uom")
+  quantity                        Decimal @db.Decimal(10, 3)
+  totalValues                     Decimal @map("total_values") @db.Decimal(15, 2)
+  valueSalesExcludingST           Decimal @map("value_sales_excluding_st") @db.Decimal(15, 2)
+  fixedNotifiedValueOrRetailPrice Decimal @map("fixed_notified_value_or_retail_price") @db.Decimal(15, 2)
+  salesTaxApplicable              Decimal @map("sales_tax_applicable") @db.Decimal(15, 2)
+  salesTaxWithheldAtSource        Decimal @map("sales_tax_withheld_at_source") @db.Decimal(15, 2)
+  extraTax                        String? @map("extra_tax")
+  furtherTax                      Decimal @map("further_tax") @db.Decimal(15, 2)
+  sroScheduleNo                   String? @map("sro_schedule_no")
+  fedPayable                      Decimal @map("fed_payable") @db.Decimal(15, 2)
+  discount                        Decimal @db.Decimal(15, 2)
+  saleType                        String? @map("sale_type")
+  sroItemSerialNo                 String? @map("sro_item_serial_no")
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_items")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  apiKey    String   @unique @map("api_key")
+  companyName String @map("company_name")
+  companyAddress String @map("company_address")
+  companyPhone String? @map("company_phone")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("users")
+}
