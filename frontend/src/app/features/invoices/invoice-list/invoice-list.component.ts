@@ -50,7 +50,7 @@ import { NotificationService } from '../../../core/services/notification.service
   template: `
     <div class="invoice-list-container">
       <div class="page-header">
-        <h1>Invoice Management</h1>
+        <h1>Invoice Management *</h1>
         <button nz-button nzType="primary" (click)="createInvoice()">
           <span nz-icon nzType="plus"></span>
           Create Invoice
