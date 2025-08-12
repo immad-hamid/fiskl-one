@@ -1,0 +1,8 @@
+{
+  "/fbr/**": {
+    "target": "http://localhost:6000",
+    "secure": true,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}

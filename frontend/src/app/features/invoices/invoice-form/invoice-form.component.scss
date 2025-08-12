@@ -1,0 +1,186 @@
+.invoice-form-container {
+  padding: 0;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.form-card {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.total-display {
+  font-weight: 500;
+  color: #1890ff;
+}
+
+.items-summary {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #fafafa;
+  border-radius: 6px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.summary-row:last-child {
+  margin-bottom: 0;
+  font-size: 16px;
+  color: #1890ff;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+  padding: 24px;
+  background-color: #fafafa;
+  border-radius: 8px;
+}
+
+:host ::ng-deep .ant-table-tbody > tr > td {
+  padding: 8px !important;
+}
+
+:host ::ng-deep .ant-input-number {
+  width: 100%;
+}
+
+:host ::ng-deep .ant-form-item {
+  margin-bottom: 16px;
+}
+
+:host ::ng-deep .ant-form-item-label > label {
+  font-weight: 500;
+}
+
+/* Grid wrapper controlling how many ITEM CARDS per row */
+.items-grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* Individual ITEM CARD (each invoice item) */
+.item-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  background: #fff;
+  padding: 12px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.item-card:hover {
+  border-color: #d6e4ff;
+  box-shadow: 0 6px 22px rgba(24, 144, 255, 0.12);
+}
+.item-card:focus-within {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.15);
+  outline: none;
+}
+
+.item-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.item-card__title {
+  font-weight: 600;
+  color: #262626;
+}
+
+/* Fields grid INSIDE the item card */
+/* >>> CHANGED: enforce exactly 3 inputs per row */
+.item-card__fields {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* >>> CHANGED: neutralize "wide" spans so each field takes one column */
+.item-card__fields .field--wide {
+  grid-column: span 1;
+}
+
+/* Field block with label + input */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.field__label {
+  font-size: 12px;
+  color: #595959;
+}
+.field__input {
+  width: 100%;
+}
+
+/* Total block styles */
+.field--total .total-display {
+  padding: 8px 10px;
+  border: 1px dashed #e6f4ff;
+  border-radius: 6px;
+  background: #f0f5ff;
+  color: #1890ff;
+  font-weight: 600;
+}
+
+/* Inputs focus/hover (applies to nz-input and native input) */
+.field__input:hover:not(:disabled) {
+  border-color: #69b1ff;
+}
+.field__input:focus,
+.field__input:focus-within {
+  outline: none;
+  border-color: #1677ff !important;
+  box-shadow: 0 0 0 3px rgba(22, 119, 255, 0.15);
+}
+
+/* Make inner grid 1 column on small screens for readability */
+@media (max-width: 575.98px) {
+  .item-card__fields {
+    grid-template-columns: 1fr;
+  }
+  .item-card__fields .field--wide {
+    grid-column: auto;
+  }
+}
