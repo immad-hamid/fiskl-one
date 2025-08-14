@@ -57,7 +57,7 @@ const invoiceItemSchema = Joi.object({
   }),
   saleType: Joi.string().allow('', null).optional(),
   sroItemSerialNo: Joi.string().allow('', null).optional()
-});
+}).unknown(true); // Allow additional fields
 
 const createInvoiceSchema = Joi.object({
   invoiceType: Joi.string().required().messages({
@@ -113,14 +113,14 @@ const createInvoiceSchema = Joi.object({
     'array.min': 'At least one item is required',
     'any.required': 'Items are required'
   })
-});
+}).unknown(true); // Allow additional fields
 
 const updateInvoiceSchema = createInvoiceSchema.fork(
   ['invoiceType', 'invoiceDate', 'sellerNTNCNIC', 'sellerBusinessName', 'sellerProvince', 
    'sellerAddress', 'buyerNTNCNIC', 'buyerBusinessName', 'buyerProvince', 'buyerAddress', 
    'buyerRegistrationType', 'scenarioId', 'items'], 
   (schema) => schema.optional()
-);
+).unknown(true); // Allow additional fields
 
 module.exports = {
   createInvoiceSchema,

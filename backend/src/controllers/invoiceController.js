@@ -125,8 +125,12 @@ class InvoiceController {
       
       const pdfBuffer = await PDFService.generateInvoicePDF(invoice);
       
+      const filename = invoice.invoiceNumber 
+        ? `invoice-${invoice.invoiceNumber}.pdf` 
+        : `invoice-${invoice.id}.pdf`;
+      
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', `attachment; filename="invoice-${invoice.invoiceNumber}.pdf"`);
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
       res.send(pdfBuffer);
     } catch (error) {
       next(error);

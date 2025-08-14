@@ -192,7 +192,7 @@ class PDFService {
         
         <div class="invoice-header-info">
             <div>
-                <p><strong>Invoice Number:</strong> ${invoice.invoiceNumber}</p>
+                <p><strong>Invoice Number:</strong> ${invoice.invoiceNumber || 'Not Assigned'}</p>
                 <p><strong>Invoice Date:</strong> ${new Date(invoice.invoiceDate).toLocaleDateString()}</p>
                 ${invoice.invoiceRefNo ? `<p><strong>Reference No:</strong> ${invoice.invoiceRefNo}</p>` : ''}
             </div>

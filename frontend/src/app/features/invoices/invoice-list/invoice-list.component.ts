@@ -177,7 +177,7 @@ import { NotificationService } from '../../../core/services/notification.service
             <tbody>
               <tr *ngFor="let invoice of invoiceTable.data; trackBy: trackByInvoice">
                 <td>
-                  <strong>{{ invoice.invoiceNumber }}</strong>
+                  <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
                   <div class="invoice-ref" *ngIf="invoice.invoiceRefNo">
                     <small>Ref: {{ invoice.invoiceRefNo }}</small>
                   </div>

@@ -117,7 +117,7 @@ import { NotificationService } from '../../core/services/notification.service';
             <tbody>
               <tr *ngFor="let invoice of basicTable.data">
                 <td>
-                  <strong>{{ invoice.invoiceNumber }}</strong>
+                  <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
                 </td>
                 <td>{{ invoice.invoiceType }}</td>
                 <td>{{ invoice.buyerBusinessName }}</td>

@@ -3,21 +3,49 @@ const { v4: uuidv4 } = require('uuid');
 
 class InvoiceService {
   static async createInvoice(invoiceData) {
-    const { items, ...invoiceDetails } = invoiceData;
+    const { items, ...allInvoiceDetails } = invoiceData;
     
-    // Generate unique invoice number
-    const invoiceNumber = `INV-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    // Only pick fields that exist in the database schema for Invoice
+    const allowedInvoiceFields = [
+      'invoiceType', 'invoiceDate', 'sellerNTNCNIC', 'sellerBusinessName', 
+      'sellerProvince', 'sellerAddress', 'buyerNTNCNIC', 'buyerBusinessName',
+      'buyerProvince', 'buyerAddress', 'buyerRegistrationType', 'invoiceRefNo', 'scenarioId'
+    ];
+    
+    const invoiceDetails = {};
+    allowedInvoiceFields.forEach(field => {
+      if (allInvoiceDetails[field] !== undefined) {
+        invoiceDetails[field] = allInvoiceDetails[field];
+      }
+    });
+    
+    // Only pick fields that exist in the database schema for InvoiceItem
+    const allowedItemFields = [
+      'hsCode', 'productDescription', 'rate', 'uoM', 'quantity', 'totalValues',
+      'valueSalesExcludingST', 'fixedNotifiedValueOrRetailPrice', 'salesTaxApplicable',
+      'salesTaxWithheldAtSource', 'extraTax', 'furtherTax', 'sroScheduleNo',
+      'fedPayable', 'discount', 'saleType', 'sroItemSerialNo'
+    ];
+    
+    const cleanedItems = items.map(item => {
+      const cleanedItem = {};
+      allowedItemFields.forEach(field => {
+        if (item[field] !== undefined) {
+          cleanedItem[field] = item[field];
+        }
+      });
+      return cleanedItem;
+    });
     
     // Calculate total amount
-    const totalAmount = items.reduce((sum, item) => sum + parseFloat(item.totalValues), 0);
+    const totalAmount = cleanedItems.reduce((sum, item) => sum + parseFloat(item.totalValues), 0);
 
     const invoice = await prisma.invoice.create({
       data: {
-        invoiceNumber,
         ...invoiceDetails,
         totalAmount,
         items: {
-          create: items
+          create: cleanedItems
         }
       },
       include: {

@@ -9,7 +9,7 @@ datasource db {
 
 model Invoice {
   id                    Int      @id @default(autoincrement())
-  invoiceNumber         String   @unique @map("invoice_number")
+  invoiceNumber         String?  @unique @map("invoice_number")
   invoiceType           String   @map("invoice_type")
   invoiceDate           DateTime @map("invoice_date") @db.Date
   sellerNTNCNIC         String   @map("seller_ntn_cnic")

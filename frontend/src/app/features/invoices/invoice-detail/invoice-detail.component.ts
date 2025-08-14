@@ -40,7 +40,7 @@ import { NotificationService } from '../../../core/services/notification.service
           <span nz-icon nzType="arrow-left"></span>
           Back
         </button>
-        <h1 *ngIf="invoice">Invoice {{ invoice.invoiceNumber }}</h1>
+        <h1 *ngIf="invoice">Invoice {{ invoice.invoiceNumber || 'Not Assigned' }}</h1>
       </div>
       <div class="header-actions" *ngIf="invoice">
         <button nz-button (click)="editInvoice()">
@@ -138,7 +138,7 @@ import { NotificationService } from '../../../core/services/notification.service
             [nzColumn]="{ xxl: 3, xl: 2, lg: 2, md: 2, sm: 1, xs: 1 }"
           >
             <nz-descriptions-item nzTitle="Invoice Number">
-              <strong>{{ invoice.invoiceNumber }}</strong>
+              <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
             </nz-descriptions-item>
             <nz-descriptions-item
               nzTitle="Reference Number"
@@ -534,7 +534,10 @@ export class InvoiceDetailComponent implements OnInit {
         const url = window.URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `invoice-${this.invoice!.invoiceNumber}.pdf`;
+        const filename = this.invoice!.invoiceNumber 
+          ? `invoice-${this.invoice!.invoiceNumber}.pdf`
+          : `invoice-${this.invoice!.id}.pdf`;
+        link.download = filename;
         link.click();
         window.URL.revokeObjectURL(url);
         this.notificationService.success(

@@ -262,7 +262,7 @@ interface ReportData {
               <tbody>
                 <tr *ngFor="let invoice of recentInvoices">
                   <td>
-                    <strong>{{ invoice.invoiceNumber }}</strong>
+                    <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
                   </td>
                   <td>
                     <nz-tag nzColor="blue">{{ invoice.invoiceType }}</nz-tag>
