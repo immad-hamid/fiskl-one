@@ -118,6 +118,29 @@ class InvoiceController {
     }
   }
 
+  static async updateInvoiceFbrStatus(req, res, next) {
+    try {
+      const { fbrStatus } = req.body;
+      
+      if (!fbrStatus) {
+        return res.status(400).json({
+          success: false,
+          message: 'FBR status is required'
+        });
+      }
+
+      const invoice = await InvoiceService.updateInvoiceFbrStatus(req.params.id, fbrStatus);
+
+      res.json({
+        success: true,
+        message: 'Invoice FBR status updated successfully',
+        data: invoice
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
   static async downloadPDF(req, res, next) {
     try {
       const invoice = await InvoiceService.getInvoiceById(req.params.id);

@@ -24,6 +24,7 @@ model Invoice {
   invoiceRefNo          String?  @map("invoice_ref_no")
   scenarioId            String   @map("scenario_id")
   status                String   @default("pending")
+  fbrStatus             String   @default("not-posted") @map("fbr_status")
   totalAmount           Decimal  @map("total_amount") @db.Decimal(15, 2)
   createdAt             DateTime @default(now()) @map("created_at")
   updatedAt             DateTime @updatedAt @map("updated_at")

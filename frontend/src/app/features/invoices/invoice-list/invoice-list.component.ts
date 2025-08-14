@@ -171,6 +171,7 @@ import { NotificationService } from '../../../core/services/notification.service
                 <th>Date</th>
                 <th nzWidth="120px">Amount (PKR)</th>
                 <th nzWidth="100px">Status</th>
+                <th nzWidth="100px">FBR Status</th>
                 <th nzWidth="150px" nzAlign="center">Actions</th>
               </tr>
             </thead>
@@ -206,6 +207,11 @@ import { NotificationService } from '../../../core/services/notification.service
                     {{ invoice.status | titlecase }}
                   </nz-tag>
                 </td>
+                <td>
+                  <nz-tag [nzColor]="getFbrStatusColor(invoice.fbrStatus!)">
+                    {{ getFbrStatusDisplay(invoice.fbrStatus!) }}
+                  </nz-tag>
+                </td>
                 <td nzAlign="center">
                   <div class="action-buttons">
                     <button 
@@ -238,6 +244,18 @@ import { NotificationService } from '../../../core/services/notification.service
                       <span nz-icon nzType="download"></span>
                     </button>
 
+                    <!-- Post button only for pending invoices with not-posted FBR status -->
+                    <button 
+                      *ngIf="invoice.status === 'pending' && invoice.fbrStatus === 'not-posted'"
+                      nz-button 
+                      nzType="primary"
+                      nzSize="small"
+                      (click)="postToFbr(invoice.id!)"
+                      nz-tooltip
+                      nzTooltipTitle="Post to FBR">
+                      Post
+                    </button>
+
                     <div nz-dropdown [nzDropdownMenu]="actionMenu" nzPlacement="bottomRight">
                       <button nz-button nzType="link" nzSize="small">
                         <span nz-icon nzType="more"></span>
@@ -246,15 +264,6 @@ import { NotificationService } from '../../../core/services/notification.service
 
                     <nz-dropdown-menu #actionMenu="nzDropdownMenu">
                       <ul nz-menu>
-                        <li nz-menu-item (click)="changeStatus(invoice.id!, 'completed')">
-                          <span nz-icon nzType="check"></span>
-                          Mark Completed
-                        </li>
-                        <li nz-menu-item (click)="changeStatus(invoice.id!, 'pending')">
-                          <span nz-icon nzType="clock-circle"></span>
-                          Mark Pending
-                        </li>
-                        <li nz-menu-divider></li>
                         <li nz-menu-item 
                             nz-popconfirm
                             nzPopconfirmTitle="Are you sure you want to delete this invoice?"
@@ -467,6 +476,22 @@ export class InvoiceListComponent implements OnInit {
     return statusColors[status.toLowerCase()] || 'default';
   }
 
+  getFbrStatusColor(fbrStatus: string): string {
+    const fbrStatusColors: { [key: string]: string } = {
+      'not-posted': 'red',
+      'posted': 'green'
+    };
+    return fbrStatusColors[fbrStatus.toLowerCase()] || 'default';
+  }
+
+  getFbrStatusDisplay(fbrStatus: string): string {
+    const fbrStatusLabels: { [key: string]: string } = {
+      'not-posted': 'Not Posted',
+      'posted': 'Posted'
+    };
+    return fbrStatusLabels[fbrStatus.toLowerCase()] || fbrStatus;
+  }
+
   createInvoice(): void {
     this.router.navigate(['/invoices/create']);
   }
@@ -487,6 +512,19 @@ export class InvoiceListComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error updating status:', error);
+      }
+    });
+  }
+
+  postToFbr(id: number): void {
+    this.invoiceService.updateInvoiceFbrStatus(id, 'posted').subscribe({
+      next: (response) => {
+        this.notificationService.success('Success', 'Invoice posted to FBR successfully');
+        this.loadInvoices();
+      },
+      error: (error) => {
+        console.error('Error posting to FBR:', error);
+        this.notificationService.error('Error', 'Failed to post invoice to FBR');
       }
     });
   }

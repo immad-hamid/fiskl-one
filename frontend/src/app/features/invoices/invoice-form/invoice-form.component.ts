@@ -400,7 +400,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
     if (this.invoiceForm.valid) {
-      this.saveInvoice('completed');
+      this.saveInvoice('pending'); // Default to pending status
     } else {
       this.markFormGroupTouched(this.invoiceForm);
       this.notificationService.error(
@@ -414,13 +414,13 @@ export class InvoiceFormComponent implements OnInit, OnDestroy {
     this.saveInvoice('draft');
   }
 
-  saveInvoice(status: string = 'completed'): void {
+  saveInvoice(status: string = 'pending'): void {
     this.saving = true;
     const formValue = this.invoiceForm.value;
 
     const invoiceData: Invoice = {
       ...formValue,
-      status: status, // Set the status from parameter
+      status: status, // Set the status from parameter (draft or pending)
       invoiceDate: formValue.invoiceDate
         ? formValue.invoiceDate.toISOString()
         : null,

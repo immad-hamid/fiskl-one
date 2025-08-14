@@ -52,6 +52,10 @@ export class InvoiceService {
     return this.http.patch<ApiResponse<Invoice>>(`${this.apiUrl}/${id}/status`, { status });
   }
 
+  updateInvoiceFbrStatus(id: number, fbrStatus: string): Observable<ApiResponse<Invoice>> {
+    return this.http.patch<ApiResponse<Invoice>>(`${this.apiUrl}/${id}/fbr-status`, { fbrStatus });
+  }
+
   deleteInvoice(id: number): Observable<ApiResponse<void>> {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
   }

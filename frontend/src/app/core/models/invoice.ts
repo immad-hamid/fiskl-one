@@ -15,6 +15,7 @@ export interface Invoice {
   invoiceRefNo?: string;
   scenarioId: string;
   status?: string | null;
+  fbrStatus?: string | null;
   totalAmount?: number;
   createdAt?: string;
   updatedAt?: string;

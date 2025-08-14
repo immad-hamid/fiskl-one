@@ -9,7 +9,7 @@ class InvoiceService {
     const allowedInvoiceFields = [
       'invoiceType', 'invoiceDate', 'sellerNTNCNIC', 'sellerBusinessName', 
       'sellerProvince', 'sellerAddress', 'buyerNTNCNIC', 'buyerBusinessName',
-      'buyerProvince', 'buyerAddress', 'buyerRegistrationType', 'invoiceRefNo', 'scenarioId', 'status'
+      'buyerProvince', 'buyerAddress', 'buyerRegistrationType', 'invoiceRefNo', 'scenarioId', 'status', 'fbrStatus'
     ];
     
     const invoiceDetails = {};
@@ -140,7 +140,7 @@ class InvoiceService {
     const allowedInvoiceFields = [
       'invoiceType', 'invoiceDate', 'sellerNTNCNIC', 'sellerBusinessName', 
       'sellerProvince', 'sellerAddress', 'buyerNTNCNIC', 'buyerBusinessName',
-      'buyerProvince', 'buyerAddress', 'buyerRegistrationType', 'invoiceRefNo', 'scenarioId', 'status'
+      'buyerProvince', 'buyerAddress', 'buyerRegistrationType', 'invoiceRefNo', 'scenarioId', 'status', 'fbrStatus'
     ];
     
     const invoiceDetails = {};
@@ -236,6 +236,18 @@ class InvoiceService {
     const invoice = await prisma.invoice.update({
       where: { id: parseInt(id) },
       data: { status },
+      include: {
+        items: true
+      }
+    });
+
+    return invoice;
+  }
+
+  static async updateInvoiceFbrStatus(id, fbrStatus) {
+    const invoice = await prisma.invoice.update({
+      where: { id: parseInt(id) },
+      data: { fbrStatus },
       include: {
         items: true
       }

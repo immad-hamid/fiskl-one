@@ -22,6 +22,9 @@ router.put('/:id', validateRequest(updateInvoiceSchema), InvoiceController.updat
 // PATCH /api/invoices/:id/status - Update invoice status
 router.patch('/:id/status', InvoiceController.updateInvoiceStatus);
 
+// PATCH /api/invoices/:id/fbr-status - Update invoice FBR status
+router.patch('/:id/fbr-status', InvoiceController.updateInvoiceFbrStatus);
+
 // DELETE /api/invoices/:id - Delete invoice
 router.delete('/:id', InvoiceController.deleteInvoice);
 
