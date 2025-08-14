@@ -9,7 +9,7 @@ class InvoiceService {
     const allowedInvoiceFields = [
       'invoiceType', 'invoiceDate', 'sellerNTNCNIC', 'sellerBusinessName', 
       'sellerProvince', 'sellerAddress', 'buyerNTNCNIC', 'buyerBusinessName',
-      'buyerProvince', 'buyerAddress', 'buyerRegistrationType', 'invoiceRefNo', 'scenarioId'
+      'buyerProvince', 'buyerAddress', 'buyerRegistrationType', 'invoiceRefNo', 'scenarioId', 'status'
     ];
     
     const invoiceDetails = {};
@@ -134,12 +134,44 @@ class InvoiceService {
   }
 
   static async updateInvoice(id, updateData) {
-    const { items, ...invoiceDetails } = updateData;
+    const { items, ...allInvoiceDetails } = updateData;
+    
+    // Only pick fields that exist in the database schema for Invoice
+    const allowedInvoiceFields = [
+      'invoiceType', 'invoiceDate', 'sellerNTNCNIC', 'sellerBusinessName', 
+      'sellerProvince', 'sellerAddress', 'buyerNTNCNIC', 'buyerBusinessName',
+      'buyerProvince', 'buyerAddress', 'buyerRegistrationType', 'invoiceRefNo', 'scenarioId', 'status'
+    ];
+    
+    const invoiceDetails = {};
+    allowedInvoiceFields.forEach(field => {
+      if (allInvoiceDetails[field] !== undefined) {
+        invoiceDetails[field] = allInvoiceDetails[field];
+      }
+    });
     
     // Calculate new total if items are provided
     let totalAmount;
     if (items) {
-      totalAmount = items.reduce((sum, item) => sum + parseFloat(item.totalValues), 0);
+      // Only pick fields that exist in the database schema for InvoiceItem
+      const allowedItemFields = [
+        'hsCode', 'productDescription', 'rate', 'uoM', 'quantity', 'totalValues',
+        'valueSalesExcludingST', 'fixedNotifiedValueOrRetailPrice', 'salesTaxApplicable',
+        'salesTaxWithheldAtSource', 'extraTax', 'furtherTax', 'sroScheduleNo',
+        'fedPayable', 'discount', 'saleType', 'sroItemSerialNo'
+      ];
+      
+      const cleanedItems = items.map(item => {
+        const cleanedItem = {};
+        allowedItemFields.forEach(field => {
+          if (item[field] !== undefined) {
+            cleanedItem[field] = item[field];
+          }
+        });
+        return cleanedItem;
+      });
+      
+      totalAmount = cleanedItems.reduce((sum, item) => sum + parseFloat(item.totalValues), 0);
     }
 
     const updatePayload = {
@@ -157,13 +189,31 @@ class InvoiceService {
 
     // Update items if provided
     if (items) {
+      // Only pick fields that exist in the database schema for InvoiceItem
+      const allowedItemFields = [
+        'hsCode', 'productDescription', 'rate', 'uoM', 'quantity', 'totalValues',
+        'valueSalesExcludingST', 'fixedNotifiedValueOrRetailPrice', 'salesTaxApplicable',
+        'salesTaxWithheldAtSource', 'extraTax', 'furtherTax', 'sroScheduleNo',
+        'fedPayable', 'discount', 'saleType', 'sroItemSerialNo'
+      ];
+      
+      const cleanedItems = items.map(item => {
+        const cleanedItem = {};
+        allowedItemFields.forEach(field => {
+          if (item[field] !== undefined) {
+            cleanedItem[field] = item[field];
+          }
+        });
+        return cleanedItem;
+      });
+      
       // Delete existing items and create new ones
       await prisma.invoiceItem.deleteMany({
         where: { invoiceId: parseInt(id) }
       });
 
       await prisma.invoiceItem.createMany({
-        data: items.map(item => ({
+        data: cleanedItems.map(item => ({
           ...item,
           invoiceId: parseInt(id)
         }))

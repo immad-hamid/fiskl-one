@@ -420,6 +420,7 @@ export class InvoiceFormComponent implements OnInit, OnDestroy {
 
     const invoiceData: Invoice = {
       ...formValue,
+      status: status, // Set the status from parameter
       invoiceDate: formValue.invoiceDate
         ? formValue.invoiceDate.toISOString()
         : null,
