@@ -160,7 +160,9 @@ import { NotificationService } from '../../../core/services/notification.service
             [nzShowTotal]="totalTemplate"
             (nzPageIndexChange)="onPageIndexChange($event)"
             (nzPageSizeChange)="onPageSizeChange($event)"
-            nzSize="middle">
+            nzSize="middle"
+            [nzScroll]="{ x: '1200px' }"
+            [nzSize]="isMobile ? 'small' : 'middle'">
             
             <thead>
               <tr>
@@ -176,28 +178,31 @@ import { NotificationService } from '../../../core/services/notification.service
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let invoice of invoiceTable.data; trackBy: trackByInvoice">
-                <td>
-                  <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
-                  <div class="invoice-ref" *ngIf="invoice.invoiceRefNo">
-                    <small>Ref: {{ invoice.invoiceRefNo }}</small>
-                  </div>
-                </td>
-                <td>
-                  <nz-tag nzColor="blue">{{ invoice.invoiceType }}</nz-tag>
-                </td>
-                <td>
-                  <div class="business-info">
-                    <strong>{{ invoice.buyerBusinessName }}</strong>
-                    <div><small>{{ invoice.buyerProvince }}</small></div>
-                  </div>
-                </td>
-                <td>
-                  <div class="business-info">
-                    <strong>{{ invoice.sellerBusinessName }}</strong>
-                    <div><small>{{ invoice.sellerProvince }}</small></div>
-                  </div>
-                </td>
+              @for (invoice of invoiceTable.data; track trackByInvoice($index, invoice)) {
+                <tr>
+                  <td>
+                    <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
+                    @if (invoice.invoiceRefNo) {
+                      <div class="invoice-ref">
+                        <small>Ref: {{ invoice.invoiceRefNo }}</small>
+                      </div>
+                    }
+                  </td>
+                  <td>
+                    <nz-tag nzColor="blue">{{ invoice.invoiceType }}</nz-tag>
+                  </td>
+                  <td>
+                    <div class="business-info">
+                      <strong>{{ invoice.buyerBusinessName }}</strong>
+                      <div><small>{{ invoice.buyerProvince }}</small></div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="business-info">
+                      <strong>{{ invoice.sellerBusinessName }}</strong>
+                      <div><small>{{ invoice.sellerProvince }}</small></div>
+                    </div>
+                  </td>
                 <td>{{ invoice.invoiceDate | date:'dd/MM/yyyy' }}</td>
                 <td>
                   <strong>{{ invoice.totalAmount | number:'1.2-2' }}</strong>
@@ -245,16 +250,17 @@ import { NotificationService } from '../../../core/services/notification.service
                     </button>
 
                     <!-- Post button only for pending invoices with not-posted FBR status -->
-                    <button 
-                      *ngIf="invoice.status === 'pending' && invoice.fbrStatus === 'not-posted'"
-                      nz-button 
-                      nzType="primary"
-                      nzSize="small"
-                      (click)="postToFbr(invoice.id!)"
-                      nz-tooltip
-                      nzTooltipTitle="Post to FBR">
-                      Post
-                    </button>
+                    @if (invoice.status === 'pending' && invoice.fbrStatus === 'not-posted') {
+                      <button 
+                        nz-button 
+                        nzType="primary"
+                        nzSize="small"
+                        (click)="postToFbr(invoice.id!)"
+                        nz-tooltip
+                        nzTooltipTitle="Post to FBR">
+                        Post
+                      </button>
+                    }
 
                     <div nz-dropdown [nzDropdownMenu]="actionMenu" nzPlacement="bottomRight">
                       <button nz-button nzType="link" nzSize="small">
@@ -277,6 +283,7 @@ import { NotificationService } from '../../../core/services/notification.service
                   </div>
                 </td>
               </tr>
+              }
             </tbody>
           </nz-table>
 
@@ -284,15 +291,16 @@ import { NotificationService } from '../../../core/services/notification.service
             Showing {{ range[0] }}-{{ range[1] }} of {{ total }} invoices
           </ng-template>
 
-          <nz-empty 
-            *ngIf="invoices.length === 0 && !loading"
-            nzNotFoundContent="No invoices found">
-            <div nz-empty-footer>
-              <button nz-button nzType="primary" (click)="createInvoice()">
-                Create Invoice
-              </button>
-            </div>
-          </nz-empty>
+          @if (invoices.length === 0 && !loading) {
+            <nz-empty 
+              nzNotFoundContent="No invoices found">
+              <div nz-empty-footer>
+                <button nz-button nzType="primary" (click)="createInvoice()">
+                  Create Invoice
+                </button>
+              </div>
+            </nz-empty>
+          }
         </nz-spin>
       </nz-card>
     </div>
@@ -307,6 +315,8 @@ import { NotificationService } from '../../../core/services/notification.service
       justify-content: space-between;
       align-items: center;
       margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 16px;
     }
 
     .page-header h1 {
@@ -326,17 +336,20 @@ import { NotificationService } from '../../../core/services/notification.service
       display: flex;
       gap: 8px;
       margin-top: 16px;
+      flex-wrap: wrap;
     }
 
     .table-actions {
       display: flex;
       gap: 8px;
+      flex-wrap: wrap;
     }
 
     .action-buttons {
       display: flex;
       align-items: center;
       gap: 4px;
+      flex-wrap: wrap;
     }
 
     .business-info strong {
@@ -367,6 +380,106 @@ import { NotificationService } from '../../../core/services/notification.service
     :host ::ng-deep .ant-empty-footer {
       margin-top: 16px;
     }
+
+    // Responsive design for mobile devices
+    @media (max-width: 768px) {
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .page-header h1 {
+        font-size: 20px;
+      }
+
+      .filter-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .filter-actions button {
+        width: 100%;
+      }
+
+      .action-buttons {
+        justify-content: center;
+      }
+
+      .action-buttons button {
+        min-width: 32px;
+      }
+
+      // Hide less important columns on mobile
+      :host ::ng-deep .ant-table-thead > tr > th:nth-child(2),
+      :host ::ng-deep .ant-table-tbody > tr > td:nth-child(2),
+      :host ::ng-deep .ant-table-thead > tr > th:nth-child(4),
+      :host ::ng-deep .ant-table-tbody > tr > td:nth-child(4),
+      :host ::ng-deep .ant-table-thead > tr > th:nth-child(5),
+      :host ::ng-deep .ant-table-tbody > tr > td:nth-child(5) {
+        display: none;
+      }
+
+      // Adjust remaining columns
+      :host ::ng-deep .ant-table-thead > tr > th,
+      :host ::ng-deep .ant-table-tbody > tr > td {
+        padding: 8px 4px;
+        font-size: 12px;
+      }
+
+      :host ::ng-deep .ant-table-thead > tr > th:first-child,
+      :host ::ng-deep .ant-table-tbody > tr > td:first-child {
+        min-width: 120px;
+      }
+
+      .business-info strong {
+        font-size: 12px;
+      }
+
+      .business-info small {
+        font-size: 10px;
+      }
+    }
+
+    // Tablet responsive design
+    @media (max-width: 1024px) and (min-width: 769px) {
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      :host ::ng-deep .ant-table-thead > tr > th,
+      :host ::ng-deep .ant-table-tbody > tr > td {
+        padding: 12px 8px;
+        font-size: 13px;
+      }
+
+      .action-buttons {
+        gap: 2px;
+      }
+    }
+
+    // Large screens optimization
+    @media (min-width: 1200px) {
+      .page-header {
+        margin-bottom: 32px;
+      }
+
+      .filter-card, .table-card {
+        margin-bottom: 24px;
+      }
+    }
+
+    // Table scroll for small screens
+    @media (max-width: 992px) {
+      :host ::ng-deep .ant-table-wrapper {
+        overflow-x: auto;
+      }
+
+      :host ::ng-deep .ant-table {
+        min-width: 800px;
+      }
+    }
   `]
 })
 export class InvoiceListComponent implements OnInit {
@@ -376,6 +489,7 @@ export class InvoiceListComponent implements OnInit {
   pageIndex = 1;
   pageSize = 10;
   filterForm: FormGroup;
+  isMobile = false;
 
   constructor(
     private fb: FormBuilder,
@@ -392,7 +506,12 @@ export class InvoiceListComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.checkIsMobile();
     this.loadInvoices();
+  }
+
+  private checkIsMobile(): void {
+    this.isMobile = window.innerWidth <= 768;
   }
 
   loadInvoices(): void {

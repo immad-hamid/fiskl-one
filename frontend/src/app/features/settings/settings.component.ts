@@ -163,20 +163,23 @@ interface AppSettings {
                         (nzChange)="handleLogoChange($event)"
                       >
                         <div class="upload-content">
-                          <img
-                            *ngIf="logoUrl"
-                            [src]="logoUrl"
-                            alt="Company Logo"
-                            class="uploaded-logo"
-                          />
-                          <div *ngIf="!logoUrl" class="upload-placeholder">
-                            <span
-                              nz-icon
-                              nzType="plus"
-                              class="upload-icon"
-                            ></span>
-                            <div class="upload-text">Upload Logo</div>
-                          </div>
+                          @if (logoUrl) {
+                            <img
+                              [src]="logoUrl"
+                              alt="Company Logo"
+                              class="uploaded-logo"
+                            />
+                          }
+                          @if (!logoUrl) {
+                            <div class="upload-placeholder">
+                              <span
+                                nz-icon
+                                nzType="plus"
+                                class="upload-icon"
+                              ></span>
+                              <div class="upload-text">Upload Logo</div>
+                            </div>
+                          }
                         </div>
                       </nz-upload>
                       <div class="upload-hint">

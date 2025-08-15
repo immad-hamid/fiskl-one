@@ -1,17 +1,23 @@
 <nz-layout class="app-layout">
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" 
+       [class.active]="!isCollapsed && isMobile" 
+       (click)="toggleCollapsed()"></div>
+  
   <nz-sider
     class="menu-sidebar"
+    [class.mobile]="isMobile"
     nzCollapsible
     [(nzCollapsed)]="isCollapsed"
     [nzTrigger]="null"
     nzWidth="250px"
-    [nzCollapsedWidth]="80"
+    [nzCollapsedWidth]="isMobile ? 0 : 80"
   >
     <app-sidebar [isCollapsed]="isCollapsed"></app-sidebar>
   </nz-sider>
 
   <nz-layout>
-    <nz-header class="app-header">
+    <nz-header class="app-header" [class.collapsed]="isCollapsed && !isMobile">
       <app-header
         [isCollapsed]="isCollapsed"
         (toggleCollapsed)="toggleCollapsed()"
@@ -19,7 +25,7 @@
       </app-header>
     </nz-header>
 
-    <nz-content class="app-content">
+    <nz-content class="app-content" [class.collapsed]="isCollapsed && !isMobile">
       <div class="content-wrapper">
         <router-outlet></router-outlet>
       </div>

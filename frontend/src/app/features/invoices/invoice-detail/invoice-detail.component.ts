@@ -40,24 +40,27 @@ import { NotificationService } from '../../../core/services/notification.service
           <span nz-icon nzType="arrow-left"></span>
           Back
         </button>
-        <h1 *ngIf="invoice">Invoice {{ invoice.invoiceNumber || 'Not Assigned' }}</h1>
+        @if (invoice) {
+          <h1>Invoice {{ invoice.invoiceNumber || 'Not Assigned' }}</h1>
+        }
       </div>
-      <div class="header-actions" *ngIf="invoice">
-        <button nz-button (click)="editInvoice()">
-          <span nz-icon nzType="edit"></span>
-          Edit
-        </button>
-        <button nz-button nzType="primary" (click)="downloadPDF()">
-          <span nz-icon nzType="download"></span>
-          Download PDF
-        </button>
-        <div
-          nz-dropdown
-          [nzDropdownMenu]="actionMenu"
-          nzPlacement="bottomRight"
-        >
-          <button nz-button>
-            <span nz-icon nzType="more"></span>
+      @if (invoice) {
+        <div class="header-actions">
+          <button nz-button (click)="editInvoice()">
+            <span nz-icon nzType="edit"></span>
+            Edit
+          </button>
+          <button nz-button nzType="primary" (click)="downloadPDF()">
+            <span nz-icon nzType="download"></span>
+            Download PDF
+          </button>
+          <div
+            nz-dropdown
+            [nzDropdownMenu]="actionMenu"
+            nzPlacement="bottomRight"
+          >
+            <button nz-button>
+              <span nz-icon nzType="more"></span>
           </button>
         </div>
         <nz-dropdown-menu #actionMenu="nzDropdownMenu">
@@ -82,10 +85,12 @@ import { NotificationService } from '../../../core/services/notification.service
             </li>
           </ul>
         </nz-dropdown-menu>
-      </div>
+        </div>
+      }
     </div>
     <nz-spin [nzSpinning]="loading">
-      <div *ngIf="invoice">
+      @if (invoice) {
+        <div>
         <!-- Invoice Header -->
         <nz-card class="detail-card">
           <div nz-row nzGutter="16">
@@ -140,12 +145,12 @@ import { NotificationService } from '../../../core/services/notification.service
             <nz-descriptions-item nzTitle="Invoice Number">
               <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
             </nz-descriptions-item>
-            <nz-descriptions-item
-              nzTitle="Reference Number"
-              *ngIf="invoice.invoiceRefNo"
-            >
-              {{ invoice.invoiceRefNo }}
-            </nz-descriptions-item>
+            @if (invoice.invoiceRefNo) {
+              <nz-descriptions-item
+                nzTitle="Reference Number">
+                {{ invoice.invoiceRefNo }}
+              </nz-descriptions-item>
+            }
             <nz-descriptions-item nzTitle="Scenario ID">
               <nz-tag nzColor="blue">{{ invoice.scenarioId }}</nz-tag>
             </nz-descriptions-item>
@@ -234,42 +239,46 @@ import { NotificationService } from '../../../core/services/notification.service
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let item of invoice.items; let i = index">
-                <td nzLeft>
-                  <strong>{{ item.hsCode }}</strong>
-                </td>
-                <td>
-                  <div class="item-description">
-                    {{ item.productDescription }}
-                    <div *ngIf="item.saleType" class="item-meta">
-                      <small>Type: {{ item.saleType }}</small>
+              @for (item of invoice.items; track $index; let i = $index) {
+                <tr>
+                  <td nzLeft>
+                    <strong>{{ item.hsCode }}</strong>
+                  </td>
+                  <td>
+                    <div class="item-description">
+                      {{ item.productDescription }}
+                      @if (item.saleType) {
+                        <div class="item-meta">
+                          <small>Type: {{ item.saleType }}</small>
+                        </div>
+                      }
                     </div>
-                  </div>
-                </td>
-                <td>{{ item.rate }}</td>
-                <td>{{ item.uoM }}</td>
-                <td nzAlign="right">{{ item.quantity | number : '1.2-2' }}</td>
-                <td nzAlign="right">
-                  PKR {{ item.valueSalesExcludingST | number : '1.2-2' }}
-                </td>
-                <td nzAlign="right">
-                  PKR {{ item.salesTaxApplicable | number : '1.2-2' }}
-                </td>
-                <td nzAlign="right">
-                  PKR {{ item.fedPayable | number : '1.2-2' }}
-                </td>
-                <td nzAlign="right">
-                  PKR {{ item.discount | number : '1.2-2' }}
-                </td>
-                <td nzAlign="right">
-                  PKR {{ item.furtherTax | number : '1.2-2' }}
-                </td>
-                <td nzAlign="right" nzRight>
-                  <strong class="total-amount"
-                    >PKR {{ item.totalValues | number : '1.2-2' }}</strong
-                  >
-                </td>
-              </tr>
+                  </td>
+                  <td>{{ item.rate }}</td>
+                  <td>{{ item.uoM }}</td>
+                  <td nzAlign="right">{{ item.quantity | number : '1.2-2' }}</td>
+                  <td nzAlign="right">
+                    PKR {{ item.valueSalesExcludingST | number : '1.2-2' }}
+                  </td>
+                  <td nzAlign="right">
+                    PKR {{ item.salesTaxApplicable | number : '1.2-2' }}
+                  </td>
+                  <td nzAlign="right">
+                    PKR {{ item.fedPayable | number : '1.2-2' }}
+                  </td>
+                  <td nzAlign="right">
+                    PKR {{ item.discount | number : '1.2-2' }}
+                  </td>
+                  <td nzAlign="right">
+                    PKR {{ item.furtherTax | number : '1.2-2' }}
+                  </td>
+                  <td nzAlign="right" nzRight>
+                    <strong class="total-amount"
+                      >PKR {{ item.totalValues | number : '1.2-2' }}</strong
+                    >
+                  </td>
+                </tr>
+              }
             </tbody>
           </nz-table>
 
@@ -308,7 +317,8 @@ import { NotificationService } from '../../../core/services/notification.service
             </div>
           </div>
         </nz-card>
-      </div>
+        </div>
+      }
     </nz-spin>
   </div>`,
   styles: [

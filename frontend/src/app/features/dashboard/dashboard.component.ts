@@ -115,50 +115,53 @@ import { NotificationService } from '../../core/services/notification.service';
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let invoice of basicTable.data">
-                <td>
-                  <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
-                </td>
-                <td>{{ invoice.invoiceType }}</td>
-                <td>{{ invoice.buyerBusinessName }}</td>
-                <td>{{ invoice.invoiceDate | date:'dd/MM/yyyy' }}</td>
-                <td>PKR {{ invoice.totalAmount | number:'1.2-2' }}</td>
-                <td>
-                  <nz-tag 
-                    [nzColor]="getStatusColor(invoice.status!)">
-                    {{ invoice.status | titlecase }}
-                  </nz-tag>
-                </td>
-                <td>
-                  <div class="action-buttons">
-                    <button 
-                      nz-button 
-                      nzType="link" 
-                      nzSize="small"
-                      (click)="viewInvoice(invoice.id!)"
-                      nz-tooltip
-                      nzTooltipTitle="View Details">
-                      <span nz-icon nzType="eye"></span>
-                    </button>
-                    <button 
-                      nz-button 
-                      nzType="link" 
-                      nzSize="small"
-                      (click)="downloadPDF(invoice.id!)"
-                      nz-tooltip
-                      nzTooltipTitle="Download PDF">
-                      <span nz-icon nzType="download"></span>
-                    </button>
-                  </div>
-                </td>
-              </tr>
+              @for (invoice of basicTable.data; track invoice.id) {
+                <tr>
+                  <td>
+                    <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
+                  </td>
+                  <td>{{ invoice.invoiceType }}</td>
+                  <td>{{ invoice.buyerBusinessName }}</td>
+                  <td>{{ invoice.invoiceDate | date:'dd/MM/yyyy' }}</td>
+                  <td>PKR {{ invoice.totalAmount | number:'1.2-2' }}</td>
+                  <td>
+                    <nz-tag 
+                      [nzColor]="getStatusColor(invoice.status!)">
+                      {{ invoice.status | titlecase }}
+                    </nz-tag>
+                  </td>
+                  <td>
+                    <div class="action-buttons">
+                      <button 
+                        nz-button 
+                        nzType="link" 
+                        nzSize="small"
+                        (click)="viewInvoice(invoice.id!)"
+                        nz-tooltip
+                        nzTooltipTitle="View Details">
+                        <span nz-icon nzType="eye"></span>
+                      </button>
+                      <button 
+                        nz-button 
+                        nzType="link" 
+                        nzSize="small"
+                        (click)="downloadPDF(invoice.id!)"
+                        nz-tooltip
+                        nzTooltipTitle="Download PDF">
+                        <span nz-icon nzType="download"></span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              }
             </tbody>
           </nz-table>
 
-          <nz-empty 
-            *ngIf="recentInvoices.length === 0 && !loadingInvoices"
-            nzNotFoundContent="No invoices found">
-          </nz-empty>
+          @if (recentInvoices.length === 0 && !loadingInvoices) {
+            <nz-empty 
+              nzNotFoundContent="No invoices found">
+            </nz-empty>
+          }
         </nz-spin>
       </nz-card>
     </div>

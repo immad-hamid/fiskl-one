@@ -206,37 +206,35 @@ interface ReportData {
           <div nz-row [nzGutter]="16">
             <div nz-col nzXs="24" nzMd="12">
               <nz-card nzTitle="By Status" class="breakdown-card">
-                <div
-                  class="breakdown-item"
-                  *ngFor="let item of getStatusBreakdown()"
-                >
-                  <div class="breakdown-label">
-                    <nz-tag [nzColor]="getStatusColor(item.status)">{{
-                      item.status | titlecase
-                    }}</nz-tag>
+                @for (item of getStatusBreakdown(); track item.status) {
+                  <div class="breakdown-item">
+                    <div class="breakdown-label">
+                      <nz-tag [nzColor]="getStatusColor(item.status)">{{
+                        item.status | titlecase
+                      }}</nz-tag>
+                    </div>
+                    <div class="breakdown-value">
+                      <strong>{{ item.count }}</strong>
+                      <small>({{ item.percentage.toFixed(1) }}%)</small>
+                    </div>
                   </div>
-                  <div class="breakdown-value">
-                    <strong>{{ item.count }}</strong>
-                    <small>({{ item.percentage.toFixed(1) }}%)</small>
-                  </div>
-                </div>
+                }
               </nz-card>
             </div>
 
             <div nz-col nzXs="24" nzMd="12">
               <nz-card nzTitle="By Type" class="breakdown-card">
-                <div
-                  class="breakdown-item"
-                  *ngFor="let item of getTypeBreakdown()"
-                >
-                  <div class="breakdown-label">
-                    <nz-tag nzColor="blue">{{ item.type }}</nz-tag>
+                @for (item of getTypeBreakdown(); track item.type) {
+                  <div class="breakdown-item">
+                    <div class="breakdown-label">
+                      <nz-tag nzColor="blue">{{ item.type }}</nz-tag>
+                    </div>
+                    <div class="breakdown-value">
+                      <strong>{{ item.count }}</strong>
+                      <small>({{ item.percentage.toFixed(1) }}%)</small>
+                    </div>
                   </div>
-                  <div class="breakdown-value">
-                    <strong>{{ item.count }}</strong>
-                    <small>({{ item.percentage.toFixed(1) }}%)</small>
-                  </div>
-                </div>
+                }
               </nz-card>
             </div>
           </div>
@@ -260,31 +258,32 @@ interface ReportData {
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let invoice of recentInvoices">
-                  <td>
-                    <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
-                  </td>
-                  <td>
-                    <nz-tag nzColor="blue">{{ invoice.invoiceType }}</nz-tag>
-                  </td>
-                  <td>{{ invoice.buyerBusinessName }}</td>
-                  <td>{{ invoice.invoiceDate | date : 'dd/MM/yyyy' }}</td>
-                  <td>PKR {{ invoice.totalAmount | number : '1.2-2' }}</td>
-                  <td>
-                    <nz-tag [nzColor]="getStatusColor(invoice.status!)">
-                      {{ invoice.status | titlecase }}
-                    </nz-tag>
-                  </td>
-                </tr>
+                @for (invoice of recentInvoices; track invoice.id) {
+                  <tr>
+                    <td>
+                      <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
+                    </td>
+                    <td>
+                      <nz-tag nzColor="blue">{{ invoice.invoiceType }}</nz-tag>
+                    </td>
+                    <td>{{ invoice.buyerBusinessName }}</td>
+                    <td>{{ invoice.invoiceDate | date : 'dd/MM/yyyy' }}</td>
+                    <td>PKR {{ invoice.totalAmount | number : '1.2-2' }}</td>
+                    <td>
+                      <nz-tag [nzColor]="getStatusColor(invoice.status!)">
+                        {{ invoice.status | titlecase }}
+                      </nz-tag>
+                    </td>
+                  </tr>
+                }
               </tbody>
             </nz-table>
           </nz-card>
-        </div>
+          </div>
 
         <nz-empty
           *ngIf="!reportData && !loading"
-          nzNotFoundContent="No report data available"
-        >
+          nzNotFoundContent="No report data available">
           <div nz-empty-footer>
             <button nz-button nzType="primary" (click)="generateReport()">
               Generate Report

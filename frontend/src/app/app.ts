@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
@@ -33,11 +33,19 @@ import { SidebarComponent } from './layout/sidebar/sidebar.component';
   templateUrl: './app.html',
   styleUrls: ['./app.scss'],
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
   isCollapsed = false;
   currentRoute = '';
+  isMobile = false;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.checkIsMobile();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any) {
+    this.checkIsMobile();
+  }
 
   ngOnInit() {
     this.router.events
@@ -45,6 +53,18 @@ export class App implements OnInit {
       .subscribe((event: NavigationEnd) => {
         this.currentRoute = event.urlAfterRedirects;
       });
+  }
+
+  ngOnDestroy() {
+    // Add any cleanup if needed
+  }
+
+  private checkIsMobile() {
+    this.isMobile = window.innerWidth <= 768;
+    // On mobile, start with collapsed sidebar
+    if (this.isMobile) {
+      this.isCollapsed = true;
+    }
   }
 
   toggleCollapsed(): void {

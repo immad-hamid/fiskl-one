@@ -29,7 +29,9 @@ interface MenuItem {
     <div class="sidebar-header">
       <div class="logo" [class.collapsed]="isCollapsed">
         <span nz-icon nzType="file-text" class="logo-icon"></span>
-        <span class="logo-text" *ngIf="!isCollapsed">{{ companyName }}</span>
+        @if (!isCollapsed) {
+          <span class="logo-text">{{ companyName }}</span>
+        }
       </div>
     </div>
 
@@ -38,39 +40,44 @@ interface MenuItem {
         [nzInlineCollapsed]="isCollapsed"
         class="sidebar-menu">
       
-      <ng-container *ngFor="let item of menuItems">
-        <li nz-menu-item 
-            *ngIf="!item.children"
-            [routerLink]="item.route"
-            routerLinkActive="ant-menu-item-selected"
-            [nz-tooltip]="isCollapsed ? item.title : null"
-            nzTooltipPlacement="right">
-          <span nz-icon [nzType]="item.icon"></span>
-          <span class="menu-text">{{ item.title }}</span>
-        </li>
+      @for (item of menuItems; track item.route) {
+        @if (!item.children) {
+          <li nz-menu-item 
+              [routerLink]="item.route"
+              routerLinkActive="ant-menu-item-selected"
+              [nz-tooltip]="isCollapsed ? item.title : null"
+              nzTooltipPlacement="right">
+            <span nz-icon [nzType]="item.icon"></span>
+            <span class="menu-text">{{ item.title }}</span>
+          </li>
+        }
 
-        <li nz-submenu 
-            *ngIf="item.children"
-            [nzTitle]="item.title"
-            [nzIcon]="item.icon">
-          <ul>
-            <li nz-menu-item 
-                *ngFor="let child of item.children"
-                [routerLink]="child.route"
-                routerLinkActive="ant-menu-item-selected">
-              <span nz-icon [nzType]="child.icon"></span>
-              <span>{{ child.title }}</span>
-            </li>
-          </ul>
-        </li>
-      </ng-container>
+        @if (item.children) {
+          <li nz-submenu 
+              [nzTitle]="item.title"
+              [nzIcon]="item.icon">
+            <ul>
+              @for (child of item.children; track child.route) {
+                <li nz-menu-item 
+                    [routerLink]="child.route"
+                    routerLinkActive="ant-menu-item-selected">
+                  <span nz-icon [nzType]="child.icon"></span>
+                  <span>{{ child.title }}</span>
+                </li>
+              }
+            </ul>
+          </li>
+        }
+      }
     </ul>
 
-    <div class="sidebar-footer" *ngIf="!isCollapsed">
-      <div class="version-info">
-        <small>Version {{ version }}</small>
+    @if (!isCollapsed) {
+      <div class="sidebar-footer">
+        <div class="version-info">
+          <small>Version {{ version }}</small>
+        </div>
       </div>
-    </div>
+    }
   `,
   styles: [`
     .sidebar-header {
