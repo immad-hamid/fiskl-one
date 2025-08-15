@@ -25,6 +25,9 @@ router.patch('/:id/status', InvoiceController.updateInvoiceStatus);
 // PATCH /api/invoices/:id/fbr-status - Update invoice FBR status
 router.patch('/:id/fbr-status', InvoiceController.updateInvoiceFbrStatus);
 
+// POST /api/invoices/:id/post-to-fbr - Post invoice to FBR (validate + post)
+router.post('/:id/post-to-fbr', InvoiceController.postToFbr);
+
 // DELETE /api/invoices/:id - Delete invoice
 router.delete('/:id', InvoiceController.deleteInvoice);
 

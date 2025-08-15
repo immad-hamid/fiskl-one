@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzCardComponent } from 'ng-zorro-antd/card';
-import { NzDescriptionsComponent, NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
+import { NzDescriptionsModule } from 'ng-zorro-antd/descriptions';
 import { NzDividerComponent } from 'ng-zorro-antd/divider';
 import {
-    NzDropDownModule,
+  NzDropDownModule,
 } from 'ng-zorro-antd/dropdown';
 import { NzGridModule } from 'ng-zorro-antd/grid';
 import { NzSpinModule } from 'ng-zorro-antd/spin';

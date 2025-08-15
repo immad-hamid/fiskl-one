@@ -141,6 +141,24 @@ class InvoiceController {
     }
   }
 
+  static async postToFbr(req, res, next) {
+    try {
+      const result = await InvoiceService.postToFbr(req.params.id);
+
+      res.json({
+        success: true,
+        message: 'Invoice posted to FBR successfully',
+        data: result.invoice,
+        fbrResponse: result.postResponse
+      });
+    } catch (error) {
+      res.status(400).json({
+        success: false,
+        message: error.message || 'Failed to post invoice to FBR'
+      });
+    }
+  }
+
   static async downloadPDF(req, res, next) {
     try {
       const invoice = await InvoiceService.getInvoiceById(req.params.id);

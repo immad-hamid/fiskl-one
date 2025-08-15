@@ -261,6 +261,15 @@ import { NotificationService } from '../../../core/services/notification.service
                         Post
                       </button>
                     }
+                     <button 
+                        nz-button 
+                        nzType="primary"
+                        nzSize="small"
+                        (click)="postToFbr(invoice.id!)"
+                        nz-tooltip
+                        nzTooltipTitle="Post to FBR">
+                        Post
+                      </button>
 
                     <div nz-dropdown [nzDropdownMenu]="actionMenu" nzPlacement="bottomRight">
                       <button nz-button nzType="link" nzSize="small">
@@ -636,14 +645,26 @@ export class InvoiceListComponent implements OnInit {
   }
 
   postToFbr(id: number): void {
-    this.invoiceService.updateInvoiceFbrStatus(id, 'posted').subscribe({
+    // Show loading notification
+    this.notificationService.info('Processing', 'Validating and posting invoice to FBR...');
+    
+    this.invoiceService.postToFbr(id).subscribe({
       next: (response) => {
-        this.notificationService.success('Success', 'Invoice posted to FBR successfully');
+        this.notificationService.success('Success', 'Invoice validated and posted to FBR successfully');
         this.loadInvoices();
       },
       error: (error) => {
         console.error('Error posting to FBR:', error);
-        this.notificationService.error('Error', 'Failed to post invoice to FBR');
+        
+        // Enhanced error handling based on response
+        let errorMessage = 'Failed to post invoice to FBR';
+        if (error.error?.message) {
+          errorMessage = error.error.message;
+        } else if (error.message) {
+          errorMessage = error.message;
+        }
+        
+        this.notificationService.error('Error', errorMessage);
       }
     });
   }

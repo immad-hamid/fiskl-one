@@ -56,6 +56,10 @@ export class InvoiceService {
     return this.http.patch<ApiResponse<Invoice>>(`${this.apiUrl}/${id}/fbr-status`, { fbrStatus });
   }
 
+  postToFbr(id: number): Observable<ApiResponse<Invoice>> {
+    return this.http.post<ApiResponse<Invoice>>(`${this.apiUrl}/${id}/post-to-fbr`, {});
+  }
+
   deleteInvoice(id: number): Observable<ApiResponse<void>> {
     return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${id}`);
   }

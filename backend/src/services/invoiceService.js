@@ -280,6 +280,52 @@ class InvoiceService {
       totalAmount: totalAmount._sum.totalAmount || 0
     };
   }
+
+  static async postToFbr(id) {
+    const ThirdPartyService = require('./thirdPartyService');
+
+    // Get the invoice with items
+    const invoice = await this.getInvoiceById(id);
+
+    try {
+      // Step 1: Validate invoice
+      console.log('Validating invoice:', id);
+      await ThirdPartyService.validateInvoice(invoice);
+
+      // Step 2: Post invoice
+      console.log('Posting invoice to FBR:', id);
+      const postResponse = await ThirdPartyService.postInvoice(invoice);
+
+      // Step 3: Update invoice with results
+      const updateData = {
+        status: 'completed',
+        fbrStatus: 'posted'
+      };
+
+      // Update invoice number if it was not assigned and we got one from the response
+      if ((!invoice.invoiceNumber || invoice.invoiceNumber === 'Not Assigned') && postResponse.invoiceNumber) {
+        updateData.invoiceNumber = postResponse.invoiceNumber;
+      }
+
+      const updatedInvoice = await prisma.invoice.update({
+        where: { id: parseInt(id) },
+        data: updateData,
+        include: {
+          items: true
+        }
+      });
+
+      return {
+        success: true,
+        invoice: updatedInvoice,
+        postResponse
+      };
+
+    } catch (error) {
+      console.error('FBR posting failed:', error.message);
+      throw new Error(error.message);
+    }
+  }
 }
 
 module.exports = InvoiceService;
