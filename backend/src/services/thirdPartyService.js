@@ -68,7 +68,7 @@ class ThirdPartyService {
     try {
       const payload = this.formatInvoicePayload(invoiceData);
       console.log(payload);
-      
+      console.log(`${apiUrl}/fbr/validate-invoice`)
       const response = await axios.post(`${apiUrl}/fbr/validate-invoice`, payload, {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
