@@ -204,7 +204,15 @@ export class InvoiceFormComponent implements OnInit, OnDestroy {
       grp.get('saleType')!.valueChanges.subscribe((desc: string | null) => {
         if (desc !== null) {
           const tt = this.saleTypeOptions.find((x) => x.description === desc);
-          grp.patchValue({ transTypeId: tt?.id ?? null }, { emitEvent: false });
+          
+          // Reset SRO fields immediately when sale type changes
+          grp.patchValue({ 
+            transTypeId: tt?.id ?? null,
+            sroScheduleNo: '',
+            sroItemSerialNo: '',
+            sroId: null
+          }, { emitEvent: false });
+          
           // when sale type changes, recompute the chain
           this.fetchRateForItem(grp);
         }

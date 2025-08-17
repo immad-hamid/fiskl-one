@@ -21,7 +21,10 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzToolTipModule } from 'ng-zorro-antd/tooltip';
 
 import { Invoice } from '../../../core/models/invoice';
-import { InvoiceFilters, InvoiceService } from '../../../core/services/invoice.service';
+import {
+  InvoiceFilters,
+  InvoiceService,
+} from '../../../core/services/invoice.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
@@ -45,7 +48,7 @@ import { NotificationService } from '../../../core/services/notification.service
     NzPopconfirmModule,
     NzToolTipModule,
     NzDropDownModule,
-    NzMenuModule
+    NzMenuModule,
   ],
   template: `
     <div class="invoice-list-container">
@@ -58,18 +61,23 @@ import { NotificationService } from '../../../core/services/notification.service
       </div>
 
       <!-- Filters -->
-      <nz-card nzTitle="Filters" class="filter-card" [nzBodyStyle]="{ padding: '16px' }">
+      <nz-card
+        nzTitle="Filters"
+        class="filter-card"
+        [nzBodyStyle]="{ padding: '16px' }"
+      >
         <form nz-form [formGroup]="filterForm" (ngSubmit)="applyFilters()">
           <div nz-row [nzGutter]="16">
             <div nz-col nzXs="24" nzSm="12" nzMd="6">
               <nz-form-item>
                 <nz-form-label>Search</nz-form-label>
                 <nz-form-control>
-                  <input 
-                    nz-input 
-                    placeholder="Search by buyer name..." 
+                  <input
+                    nz-input
+                    placeholder="Search by buyer name..."
                     formControlName="buyerBusinessName"
-                    (keyup.enter)="applyFilters()">
+                    (keyup.enter)="applyFilters()"
+                  />
                 </nz-form-control>
               </nz-form-item>
             </div>
@@ -78,13 +86,20 @@ import { NotificationService } from '../../../core/services/notification.service
               <nz-form-item>
                 <nz-form-label>Status</nz-form-label>
                 <nz-form-control>
-                  <nz-select 
-                    nzPlaceHolder="Select status" 
+                  <nz-select
+                    nzPlaceHolder="Select status"
                     formControlName="status"
-                    nzAllowClear>
+                    nzAllowClear
+                  >
                     <nz-option nzValue="pending" nzLabel="Pending"></nz-option>
-                    <nz-option nzValue="completed" nzLabel="Completed"></nz-option>
-                    <nz-option nzValue="cancelled" nzLabel="Cancelled"></nz-option>
+                    <nz-option
+                      nzValue="completed"
+                      nzLabel="Completed"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="cancelled"
+                      nzLabel="Cancelled"
+                    ></nz-option>
                     <nz-option nzValue="draft" nzLabel="Draft"></nz-option>
                   </nz-select>
                 </nz-form-control>
@@ -95,14 +110,27 @@ import { NotificationService } from '../../../core/services/notification.service
               <nz-form-item>
                 <nz-form-label>Invoice Type</nz-form-label>
                 <nz-form-control>
-                  <nz-select 
-                    nzPlaceHolder="Select type" 
+                  <nz-select
+                    nzPlaceHolder="Select type"
                     formControlName="invoiceType"
-                    nzAllowClear>
-                    <nz-option nzValue="Sale Invoice" nzLabel="Sale Invoice"></nz-option>
-                    <nz-option nzValue="Purchase Invoice" nzLabel="Purchase Invoice"></nz-option>
-                    <nz-option nzValue="Credit Note" nzLabel="Credit Note"></nz-option>
-                    <nz-option nzValue="Debit Note" nzLabel="Debit Note"></nz-option>
+                    nzAllowClear
+                  >
+                    <nz-option
+                      nzValue="Sale Invoice"
+                      nzLabel="Sale Invoice"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="Purchase Invoice"
+                      nzLabel="Purchase Invoice"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="Credit Note"
+                      nzLabel="Credit Note"
+                    ></nz-option>
+                    <nz-option
+                      nzValue="Debit Note"
+                      nzLabel="Debit Note"
+                    ></nz-option>
                   </nz-select>
                 </nz-form-control>
               </nz-form-item>
@@ -112,9 +140,10 @@ import { NotificationService } from '../../../core/services/notification.service
               <nz-form-item>
                 <nz-form-label>Date Range</nz-form-label>
                 <nz-form-control>
-                  <nz-range-picker 
+                  <nz-range-picker
                     formControlName="dateRange"
-                    nzFormat="yyyy-MM-dd">
+                    nzFormat="yyyy-MM-dd"
+                  >
                   </nz-range-picker>
                 </nz-form-control>
               </nz-form-item>
@@ -137,19 +166,20 @@ import { NotificationService } from '../../../core/services/notification.service
       <!-- Invoice Table -->
       <nz-card nzTitle="Invoices" class="table-card">
         <div class="table-actions" nz-card-extra>
-          <button 
-            nz-button 
-            nzType="default" 
+          <button
+            nz-button
+            nzType="default"
             (click)="refreshData()"
             nz-tooltip
-            nzTooltipTitle="Refresh">
+            nzTooltipTitle="Refresh"
+          >
             <span nz-icon nzType="reload"></span>
           </button>
         </div>
 
         <nz-spin [nzSpinning]="loading">
-          <nz-table 
-            #invoiceTable 
+          <nz-table
+            #invoiceTable
             [nzData]="invoices"
             [nzTotal]="total"
             [nzPageSize]="pageSize"
@@ -162,8 +192,8 @@ import { NotificationService } from '../../../core/services/notification.service
             (nzPageSizeChange)="onPageSizeChange($event)"
             nzSize="middle"
             [nzScroll]="{ x: '1200px' }"
-            [nzSize]="isMobile ? 'small' : 'middle'">
-            
+            [nzSize]="isMobile ? 'small' : 'middle'"
+          >
             <thead>
               <tr>
                 <th nzWidth="120px">Invoice #</th>
@@ -178,34 +208,39 @@ import { NotificationService } from '../../../core/services/notification.service
               </tr>
             </thead>
             <tbody>
-              @for (invoice of invoiceTable.data; track trackByInvoice($index, invoice)) {
-                <tr>
-                  <td>
-                    <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
-                    @if (invoice.invoiceRefNo) {
-                      <div class="invoice-ref">
-                        <small>Ref: {{ invoice.invoiceRefNo }}</small>
-                      </div>
-                    }
-                  </td>
-                  <td>
-                    <nz-tag nzColor="blue">{{ invoice.invoiceType }}</nz-tag>
-                  </td>
-                  <td>
-                    <div class="business-info">
-                      <strong>{{ invoice.buyerBusinessName }}</strong>
-                      <div><small>{{ invoice.buyerProvince }}</small></div>
-                    </div>
-                  </td>
-                  <td>
-                    <div class="business-info">
-                      <strong>{{ invoice.sellerBusinessName }}</strong>
-                      <div><small>{{ invoice.sellerProvince }}</small></div>
-                    </div>
-                  </td>
-                <td>{{ invoice.invoiceDate | date:'dd/MM/yyyy' }}</td>
+              @for (invoice of invoiceTable.data; track trackByInvoice($index,
+              invoice)) {
+              <tr>
                 <td>
-                  <strong>{{ invoice.totalAmount | number:'1.2-2' }}</strong>
+                  <strong>{{ invoice.invoiceNumber || 'Not Assigned' }}</strong>
+                  @if (invoice.invoiceRefNo) {
+                  <div class="invoice-ref">
+                    <small>Ref: {{ invoice.invoiceRefNo }}</small>
+                  </div>
+                  }
+                </td>
+                <td>
+                  <nz-tag nzColor="blue">{{ invoice.invoiceType }}</nz-tag>
+                </td>
+                <td>
+                  <div class="business-info">
+                    <strong>{{ invoice.buyerBusinessName }}</strong>
+                    <div>
+                      <small>{{ invoice.buyerProvince }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="business-info">
+                    <strong>{{ invoice.sellerBusinessName }}</strong>
+                    <div>
+                      <small>{{ invoice.sellerProvince }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ invoice.invoiceDate | date : 'dd/MM/yyyy' }}</td>
+                <td>
+                  <strong>{{ invoice.totalAmount | number : '1.2-2' }}</strong>
                 </td>
                 <td>
                   <nz-tag [nzColor]="getStatusColor(invoice.status!)">
@@ -219,65 +254,70 @@ import { NotificationService } from '../../../core/services/notification.service
                 </td>
                 <td nzAlign="center">
                   <div class="action-buttons">
-                    <button 
-                      nz-button 
-                      nzType="link" 
+                    <button
+                      nz-button
+                      nzType="link"
                       nzSize="small"
                       (click)="viewInvoice(invoice.id!)"
                       nz-tooltip
-                      nzTooltipTitle="View Details">
+                      nzTooltipTitle="View Details"
+                    >
                       <span nz-icon nzType="eye"></span>
                     </button>
 
                     <!-- Edit button only for invoices that are not completed and posted -->
-                    @if (!(invoice.status === 'completed' && invoice.fbrStatus === 'posted')) {
-                      <button 
-                        nz-button 
-                        nzType="link" 
-                        nzSize="small"
-                        (click)="editInvoice(invoice.id!)"
-                        nz-tooltip
-                        nzTooltipTitle="Edit">
-                        <span nz-icon nzType="edit"></span>
-                      </button>
+                    @if (!(invoice.status === 'completed' && invoice.fbrStatus
+                    === 'posted')) {
+                    <button
+                      nz-button
+                      nzType="link"
+                      nzSize="small"
+                      (click)="editInvoice(invoice.id!)"
+                      nz-tooltip
+                      nzTooltipTitle="Edit"
+                    >
+                      <span nz-icon nzType="edit"></span>
+                    </button>
                     }
 
                     <!-- Download button only for completed invoices with posted FBR status -->
-                    @if (invoice.status === 'completed' && invoice.fbrStatus === 'posted') {
-                      <button 
-                        nz-button 
-                        nzType="link" 
-                        nzSize="small"
-                        (click)="downloadPDF(invoice.id!)"
-                        nz-tooltip
-                        nzTooltipTitle="Download PDF">
-                        <span nz-icon nzType="download"></span>
-                      </button>
+                    @if (invoice.status === 'completed' && invoice.fbrStatus ===
+                    'posted') {
+                    <button
+                      nz-button
+                      nzType="link"
+                      nzSize="small"
+                      (click)="downloadPDF(invoice.id!)"
+                      nz-tooltip
+                      nzTooltipTitle="Download PDF"
+                    >
+                      <span nz-icon nzType="download"></span>
+                    </button>
                     }
 
                     <!-- Post button only for pending invoices with not-posted FBR status -->
-                    @if (invoice.status === 'pending' && invoice.fbrStatus === 'not-posted') {
-                      <button 
-                        nz-button 
-                        nzType="primary"
-                        nzSize="small"
-                        (click)="postToFbr(invoice.id!)"
-                        nz-tooltip
-                        nzTooltipTitle="Post to FBR">
-                        Post
-                      </button>
+                    @if (invoice.status === 'pending' && invoice.fbrStatus ===
+                    'not-posted') {
+                    <button
+                      nz-button
+                      nzType="primary"
+                      nzSize="small"
+                      (click)="postToFbr(invoice.id!)"
+                      nz-tooltip
+                      nzTooltipTitle="Post to FBR"
+                    >
+                      Post
+                    </button>
                     }
-                     <button 
-                        nz-button 
-                        nzType="primary"
-                        nzSize="small"
-                        (click)="postToFbr(invoice.id!)"
-                        nz-tooltip
-                        nzTooltipTitle="Post to FBR">
-                        Post
-                      </button>
+                    <!-- Delete option only for invoices that are not completed and posted -->
+                    @if (!(invoice.status === 'completed' && invoice.fbrStatus
+                    === 'posted')) {
 
-                    <div nz-dropdown [nzDropdownMenu]="actionMenu" nzPlacement="bottomRight">
+                    <div
+                      nz-dropdown
+                      [nzDropdownMenu]="actionMenu"
+                      nzPlacement="bottomRight"
+                    >
                       <button nz-button nzType="link" nzSize="small">
                         <span nz-icon nzType="more"></span>
                       </button>
@@ -285,19 +325,23 @@ import { NotificationService } from '../../../core/services/notification.service
 
                     <nz-dropdown-menu #actionMenu="nzDropdownMenu">
                       <ul nz-menu>
-                        <!-- Delete option only for invoices that are not completed and posted -->
-                        @if (!(invoice.status === 'completed' && invoice.fbrStatus === 'posted')) {
-                          <li nz-menu-item 
-                              nz-popconfirm
-                              nzPopconfirmTitle="Are you sure you want to delete this invoice?"
-                              nzPopconfirmPlacement="topRight"
-                              (nzOnConfirm)="deleteInvoice(invoice.id!)">
-                            <span nz-icon nzType="delete" class="text-danger"></span>
-                            Delete
-                          </li>
-                        }
+                        <li
+                          nz-menu-item
+                          nz-popconfirm
+                          nzPopconfirmTitle="Are you sure you want to delete this invoice?"
+                          nzPopconfirmPlacement="topRight"
+                          (nzOnConfirm)="deleteInvoice(invoice.id!)"
+                        >
+                          <span
+                            nz-icon
+                            nzType="delete"
+                            class="text-danger"
+                          ></span>
+                          Delete
+                        </li>
                       </ul>
                     </nz-dropdown-menu>
+                    }
                   </div>
                 </td>
               </tr>
@@ -310,195 +354,198 @@ import { NotificationService } from '../../../core/services/notification.service
           </ng-template>
 
           @if (invoices.length === 0 && !loading) {
-            <nz-empty 
-              nzNotFoundContent="No invoices found">
-              <div nz-empty-footer>
-                <button nz-button nzType="primary" (click)="createInvoice()">
-                  Create Invoice
-                </button>
-              </div>
-            </nz-empty>
+          <nz-empty nzNotFoundContent="No invoices found">
+            <div nz-empty-footer>
+              <button nz-button nzType="primary" (click)="createInvoice()">
+                Create Invoice
+              </button>
+            </div>
+          </nz-empty>
           }
         </nz-spin>
       </nz-card>
     </div>
   `,
-  styles: [`
-    .invoice-list-container {
-      padding: 0;
-    }
+  styles: [
+    `
+      .invoice-list-container {
+        padding: 0;
+      }
 
-    .page-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-      gap: 16px;
-    }
-
-    .page-header h1 {
-      margin: 0;
-      font-size: 24px;
-      font-weight: 600;
-      color: #262626;
-    }
-
-    .filter-card, .table-card {
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      margin-bottom: 16px;
-    }
-
-    .filter-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 16px;
-      flex-wrap: wrap;
-    }
-
-    .table-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .action-buttons {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-
-    .business-info strong {
-      display: block;
-      margin-bottom: 2px;
-    }
-
-    .business-info small {
-      color: #8c8c8c;
-    }
-
-    .invoice-ref {
-      margin-top: 2px;
-    }
-
-    .invoice-ref small {
-      color: #8c8c8c;
-    }
-
-    .text-danger {
-      color: #ff4d4f !important;
-    }
-
-    :host ::ng-deep .ant-table-tbody > tr:hover > td {
-      background: #f5f5f5;
-    }
-
-    :host ::ng-deep .ant-empty-footer {
-      margin-top: 16px;
-    }
-
-    // Responsive design for mobile devices
-    @media (max-width: 768px) {
       .page-header {
-        flex-direction: column;
-        align-items: flex-start;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 16px;
       }
 
       .page-header h1 {
-        font-size: 20px;
+        margin: 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: #262626;
+      }
+
+      .filter-card,
+      .table-card {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 16px;
       }
 
       .filter-actions {
-        flex-direction: column;
-        width: 100%;
+        display: flex;
+        gap: 8px;
+        margin-top: 16px;
+        flex-wrap: wrap;
       }
 
-      .filter-actions button {
-        width: 100%;
+      .table-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
       }
 
       .action-buttons {
-        justify-content: center;
-      }
-
-      .action-buttons button {
-        min-width: 32px;
-      }
-
-      // Hide less important columns on mobile
-      :host ::ng-deep .ant-table-thead > tr > th:nth-child(2),
-      :host ::ng-deep .ant-table-tbody > tr > td:nth-child(2),
-      :host ::ng-deep .ant-table-thead > tr > th:nth-child(4),
-      :host ::ng-deep .ant-table-tbody > tr > td:nth-child(4),
-      :host ::ng-deep .ant-table-thead > tr > th:nth-child(5),
-      :host ::ng-deep .ant-table-tbody > tr > td:nth-child(5) {
-        display: none;
-      }
-
-      // Adjust remaining columns
-      :host ::ng-deep .ant-table-thead > tr > th,
-      :host ::ng-deep .ant-table-tbody > tr > td {
-        padding: 8px 4px;
-        font-size: 12px;
-      }
-
-      :host ::ng-deep .ant-table-thead > tr > th:first-child,
-      :host ::ng-deep .ant-table-tbody > tr > td:first-child {
-        min-width: 120px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        flex-wrap: wrap;
       }
 
       .business-info strong {
-        font-size: 12px;
+        display: block;
+        margin-bottom: 2px;
       }
 
       .business-info small {
-        font-size: 10px;
-      }
-    }
-
-    // Tablet responsive design
-    @media (max-width: 1024px) and (min-width: 769px) {
-      .page-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
+        color: #8c8c8c;
       }
 
-      :host ::ng-deep .ant-table-thead > tr > th,
-      :host ::ng-deep .ant-table-tbody > tr > td {
-        padding: 12px 8px;
-        font-size: 13px;
+      .invoice-ref {
+        margin-top: 2px;
       }
 
-      .action-buttons {
-        gap: 2px;
-      }
-    }
-
-    // Large screens optimization
-    @media (min-width: 1200px) {
-      .page-header {
-        margin-bottom: 32px;
+      .invoice-ref small {
+        color: #8c8c8c;
       }
 
-      .filter-card, .table-card {
-        margin-bottom: 24px;
-      }
-    }
-
-    // Table scroll for small screens
-    @media (max-width: 992px) {
-      :host ::ng-deep .ant-table-wrapper {
-        overflow-x: auto;
+      .text-danger {
+        color: #ff4d4f !important;
       }
 
-      :host ::ng-deep .ant-table {
-        min-width: 800px;
+      :host ::ng-deep .ant-table-tbody > tr:hover > td {
+        background: #f5f5f5;
       }
-    }
-  `]
+
+      :host ::ng-deep .ant-empty-footer {
+        margin-top: 16px;
+      }
+
+      // Responsive design for mobile devices
+      @media (max-width: 768px) {
+        .page-header {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+
+        .page-header h1 {
+          font-size: 20px;
+        }
+
+        .filter-actions {
+          flex-direction: column;
+          width: 100%;
+        }
+
+        .filter-actions button {
+          width: 100%;
+        }
+
+        .action-buttons {
+          justify-content: center;
+        }
+
+        .action-buttons button {
+          min-width: 32px;
+        }
+
+        // Hide less important columns on mobile
+        :host ::ng-deep .ant-table-thead > tr > th:nth-child(2),
+        :host ::ng-deep .ant-table-tbody > tr > td:nth-child(2),
+        :host ::ng-deep .ant-table-thead > tr > th:nth-child(4),
+        :host ::ng-deep .ant-table-tbody > tr > td:nth-child(4),
+        :host ::ng-deep .ant-table-thead > tr > th:nth-child(5),
+        :host ::ng-deep .ant-table-tbody > tr > td:nth-child(5) {
+          display: none;
+        }
+
+        // Adjust remaining columns
+        :host ::ng-deep .ant-table-thead > tr > th,
+        :host ::ng-deep .ant-table-tbody > tr > td {
+          padding: 8px 4px;
+          font-size: 12px;
+        }
+
+        :host ::ng-deep .ant-table-thead > tr > th:first-child,
+        :host ::ng-deep .ant-table-tbody > tr > td:first-child {
+          min-width: 120px;
+        }
+
+        .business-info strong {
+          font-size: 12px;
+        }
+
+        .business-info small {
+          font-size: 10px;
+        }
+      }
+
+      // Tablet responsive design
+      @media (max-width: 1024px) and (min-width: 769px) {
+        .page-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 12px;
+        }
+
+        :host ::ng-deep .ant-table-thead > tr > th,
+        :host ::ng-deep .ant-table-tbody > tr > td {
+          padding: 12px 8px;
+          font-size: 13px;
+        }
+
+        .action-buttons {
+          gap: 2px;
+        }
+      }
+
+      // Large screens optimization
+      @media (min-width: 1200px) {
+        .page-header {
+          margin-bottom: 32px;
+        }
+
+        .filter-card,
+        .table-card {
+          margin-bottom: 24px;
+        }
+      }
+
+      // Table scroll for small screens
+      @media (max-width: 992px) {
+        :host ::ng-deep .ant-table-wrapper {
+          overflow-x: auto;
+        }
+
+        :host ::ng-deep .ant-table {
+          min-width: 800px;
+        }
+      }
+    `,
+  ],
 })
 export class InvoiceListComponent implements OnInit {
   invoices: Invoice[] = [];
@@ -519,7 +566,7 @@ export class InvoiceListComponent implements OnInit {
       buyerBusinessName: [''],
       status: [null],
       invoiceType: [null],
-      dateRange: [null]
+      dateRange: [null],
     });
   }
 
@@ -535,7 +582,7 @@ export class InvoiceListComponent implements OnInit {
   loadInvoices(): void {
     this.loading = true;
     const filters = this.buildFilters();
-    
+
     this.invoiceService.getInvoices(filters).subscribe({
       next: (response) => {
         this.invoices = response.data.invoices;
@@ -545,7 +592,7 @@ export class InvoiceListComponent implements OnInit {
       error: (error) => {
         console.error('Error loading invoices:', error);
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -553,7 +600,7 @@ export class InvoiceListComponent implements OnInit {
     const formValue = this.filterForm.value;
     const filters: InvoiceFilters = {
       page: this.pageIndex,
-      limit: this.pageSize
+      limit: this.pageSize,
     };
 
     if (formValue.buyerBusinessName) {
@@ -605,10 +652,10 @@ export class InvoiceListComponent implements OnInit {
 
   getStatusColor(status: string): string {
     const statusColors: { [key: string]: string } = {
-      'pending': 'orange',
-      'completed': 'green',
-      'cancelled': 'red',
-      'draft': 'blue'
+      pending: 'orange',
+      completed: 'green',
+      cancelled: 'red',
+      draft: 'blue',
     };
     return statusColors[status.toLowerCase()] || 'default';
   }
@@ -616,7 +663,7 @@ export class InvoiceListComponent implements OnInit {
   getFbrStatusColor(fbrStatus: string): string {
     const fbrStatusColors: { [key: string]: string } = {
       'not-posted': 'red',
-      'posted': 'green'
+      posted: 'green',
     };
     return fbrStatusColors[fbrStatus.toLowerCase()] || 'default';
   }
@@ -624,7 +671,7 @@ export class InvoiceListComponent implements OnInit {
   getFbrStatusDisplay(fbrStatus: string): string {
     const fbrStatusLabels: { [key: string]: string } = {
       'not-posted': 'Not Posted',
-      'posted': 'Posted'
+      posted: 'Posted',
     };
     return fbrStatusLabels[fbrStatus.toLowerCase()] || fbrStatus;
   }
@@ -644,27 +691,36 @@ export class InvoiceListComponent implements OnInit {
   changeStatus(id: number, status: string): void {
     this.invoiceService.updateInvoiceStatus(id, status).subscribe({
       next: (response) => {
-        this.notificationService.success('Success', `Invoice status updated to ${status}`);
+        this.notificationService.success(
+          'Success',
+          `Invoice status updated to ${status}`
+        );
         this.loadInvoices();
       },
       error: (error) => {
         console.error('Error updating status:', error);
-      }
+      },
     });
   }
 
   postToFbr(id: number): void {
     // Show loading notification
-    this.notificationService.info('Processing', 'Validating and posting invoice to FBR...');
-    
+    this.notificationService.info(
+      'Processing',
+      'Validating and posting invoice to FBR...'
+    );
+
     this.invoiceService.postToFbr(id).subscribe({
       next: (response) => {
-        this.notificationService.success('Success', 'Invoice validated and posted to FBR successfully');
+        this.notificationService.success(
+          'Success',
+          'Invoice validated and posted to FBR successfully'
+        );
         this.loadInvoices();
       },
       error: (error) => {
         console.error('Error posting to FBR:', error);
-        
+
         // Enhanced error handling based on response
         let errorMessage = 'Failed to post invoice to FBR';
         if (error.error?.message) {
@@ -672,21 +728,24 @@ export class InvoiceListComponent implements OnInit {
         } else if (error.message) {
           errorMessage = error.message;
         }
-        
+
         this.notificationService.error('Error', errorMessage);
-      }
+      },
     });
   }
 
   deleteInvoice(id: number): void {
     this.invoiceService.deleteInvoice(id).subscribe({
       next: () => {
-        this.notificationService.success('Success', 'Invoice deleted successfully');
+        this.notificationService.success(
+          'Success',
+          'Invoice deleted successfully'
+        );
         this.loadInvoices();
       },
       error: (error) => {
         console.error('Error deleting invoice:', error);
-      }
+      },
     });
   }
 
@@ -699,11 +758,14 @@ export class InvoiceListComponent implements OnInit {
         link.download = `invoice-${id}.pdf`;
         link.click();
         window.URL.revokeObjectURL(url);
-        this.notificationService.success('Success', 'PDF downloaded successfully');
+        this.notificationService.success(
+          'Success',
+          'PDF downloaded successfully'
+        );
       },
       error: (error) => {
         console.error('Error downloading PDF:', error);
-      }
+      },
     });
   }
 }
