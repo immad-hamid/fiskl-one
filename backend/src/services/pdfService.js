@@ -219,170 +219,335 @@ class PDFService {
         <style>
             * { box-sizing: border-box; }
             body { 
-                font-family: 'Arial', sans-serif; 
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
                 margin: 0; 
                 padding: 20px; 
                 font-size: 12px;
-                line-height: 1.4;
-                color: #333;
+                line-height: 1.5;
+                color: #2c3e50;
+                background-color: #ffffff;
             }
             .header { 
                 display: flex; 
                 justify-content: space-between; 
                 align-items: flex-start; 
-                margin-bottom: 30px; 
-                border-bottom: 2px solid #007bff;
-                padding-bottom: 20px;
+                margin-bottom: 20px; 
+                border-bottom: 3px solid #34495e;
+                padding-bottom: 15px;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                padding: 15px;
+                border-radius: 8px;
+                margin: -20px -20px 20px -20px;
             }
-            .logo { max-height: 80px; max-width: 200px; }
-            .company-info { text-align: right; }
-            .company-info h2 { margin: 0; color: #007bff; }
+            .company-section {
+                display: flex;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            .logo { 
+                max-height: 90px; 
+                max-width: 150px; 
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+                border-radius: 6px;
+            }
+            .company-info { 
+                color: #34495e;
+            }
+            .company-info h2 { 
+                margin: 0 0 12px 0; 
+                color: #2c3e50; 
+                font-size: 22px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
+            }
+            .company-info p {
+                margin: 6px 0;
+                font-size: 12px;
+                color: #5a6c7d;
+            }
+            .invoice-meta {
+                text-align: right;
+                display: flex;
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 10px;
+            }
             .fbr-section {
                 display: flex;
                 align-items: flex-end;
-                gap: 10px;
+                gap: 15px;
                 margin-top: 20px;
+                padding: 15px;
+                background: linear-gradient(135deg, #f1f3f4 0%, #e8eaed 100%);
+                border-radius: 8px;
+                border: 1px solid #dadce0;
             }
             .fbr-logo {
                 height: 72px;
                 width: 72px;
                 object-fit: contain;
+                filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
             }
             .qr-code {
                 height: 72px;
                 width: 72px;
-            }
-            .invoice-title { 
-                font-size: 32px; 
-                color: #007bff; 
-                margin: 20px 0; 
-                text-align: center;
-                font-weight: bold;
+                border: 2px solid #34495e;
+                border-radius: 4px;
+                background: white;
+                padding: 2px;
             }
             .invoice-header-info {
                 display: flex;
                 justify-content: space-between;
-                margin: 20px 0;
-                background-color: #f8f9fa;
+                margin: 15px 0;
+                background: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
                 padding: 15px;
-                border-radius: 5px;
+                border-radius: 10px;
+                border-left: 5px solid #3498db;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            }
+            .invoice-header-info p {
+                margin: 8px 0;
+                font-weight: 500;
+            }
+            .invoice-header-info strong {
+                color: #2c3e50;
+                font-weight: 600;
             }
             .invoice-details {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 30px;
-                margin: 20px 0;
+                gap: 20px;
+                margin: 15px 0;
             }
             .party-info {
-                border: 1px solid #dee2e6;
+                border: 1px solid #bdc3c7;
                 padding: 15px;
-                border-radius: 5px;
-                background-color: #fff;
+                border-radius: 10px;
+                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+                box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+                position: relative;
+            }
+            .party-info::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(90deg, #e74c3c, #c0392b);
+                border-radius: 10px 10px 0 0;
             }
             .party-info h3 {
                 margin: 0 0 10px 0;
-                color: #007bff;
-                border-bottom: 1px solid #dee2e6;
+                color: #2c3e50;
+                border-bottom: 2px solid #ecf0f1;
                 padding-bottom: 5px;
+                font-size: 14px;
+                font-weight: 600;
+                letter-spacing: 0.5px;
             }
             .party-info p {
                 margin: 5px 0;
+                font-size: 12px;
+            }
+            .party-info strong {
+                color: #34495e;
+                font-weight: 600;
             }
             .items-table { 
                 width: 100%; 
                 border-collapse: collapse; 
-                margin: 20px 0; 
+                margin: 15px 0; 
                 font-size: 9px;
+                background: white;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+                border: 2px solid #34495e;
             }
             .items-table th { 
-                background-color: #007bff; 
+                background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
                 color: white;
-                padding: 8px 4px;
-                text-align: left;
-                font-weight: bold;
+                padding: 12px 6px;
+                text-align: center;
+                font-weight: 600;
                 font-size: 8px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                border-right: 1px solid #4a5f7a;
+                position: relative;
+            }
+            .items-table th:last-child {
+                border-right: none;
+            }
+            .items-table th::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                height: 2px;
+                background: linear-gradient(90deg, #3498db, #2980b9);
             }
             .items-table td { 
-                border: 1px solid #dee2e6; 
-                padding: 6px 4px; 
-                text-align: left; 
+                border: 1px solid #ecf0f1; 
+                padding: 10px 6px; 
+                text-align: center; 
                 font-size: 8px;
+                background: white;
+                transition: background-color 0.2s ease;
+                border-right: 1px solid #ecf0f1;
             }
-            .items-table tr:nth-child(even) {
-                background-color: #f8f9fa;
+            .items-table td:last-child {
+                border-right: none;
+            }
+            .items-table tr:nth-child(even) td {
+                background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+            }
+            .items-table tr:hover td {
+                background: linear-gradient(135deg, #e8f4fd 0%, #d1ecf1 100%);
+            }
+            .items-table tr:last-child td {
+                border-bottom: 2px solid #34495e;
             }
             .totals-section { 
-                margin-top: 30px; 
+                margin-top: 20px; 
                 display: flex;
                 justify-content: space-between;
                 align-items: flex-end;
+                gap: 20px;
             }
             .totals-table {
                 border-collapse: collapse;
-                min-width: 300px;
+                min-width: 350px;
+                background: white;
+                border-radius: 10px;
+                overflow: hidden;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             }
             .totals-table td {
-                padding: 8px 15px;
-                border: 1px solid #dee2e6;
+                padding: 12px 20px;
+                border: 1px solid #ecf0f1;
+                font-size: 13px;
             }
             .totals-table .label {
-                background-color: #f8f9fa;
-                font-weight: bold;
+                background: linear-gradient(135deg, #ecf0f1 0%, #d5dbdb 100%);
+                font-weight: 600;
                 text-align: right;
+                color: #2c3e50;
+                border-right: 3px solid #3498db;
             }
             .totals-table .amount {
                 text-align: right;
                 font-family: 'Courier New', monospace;
+                font-weight: 500;
+                background: white;
+                color: #2c3e50;
             }
             .grand-total {
-                background-color: #007bff !important;
+                background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%) !important;
                 color: white !important;
-                font-weight: bold;
-                font-size: 14px;
+                font-weight: 700 !important;
+                font-size: 15px !important;
+                text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            }
+            .grand-total.label {
+                border-right: 3px solid #f39c12 !important;
+                background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%) !important;
+                color: white !important;
+                font-weight: 800 !important;
+                text-transform: uppercase !important;
+                letter-spacing: 1px !important;
+            }
+            .grand-total.amount {
+                background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%) !important;
+                color: #1a1a1a !important;
+                font-weight: 800 !important;
+                border-left: 3px solid #f39c12 !important;
             }
             .footer {
-                margin-top: 40px;
+                margin-top: 25px;
                 text-align: center;
-                font-size: 10px;
-                color: #666;
-                border-top: 1px solid #dee2e6;
-                padding-top: 20px;
+                font-size: 11px;
+                color: #7f8c8d;
+                border-top: 2px solid #ecf0f1;
+                padding-top: 15px;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                margin-left: -20px;
+                margin-right: -20px;
+                padding-left: 20px;
+                padding-right: 20px;
+                border-radius: 0 0 10px 10px;
+            }
+            .footer p {
+                margin: 5px 0;
             }
             .status {
                 display: inline-block;
-                padding: 5px 15px;
-                border-radius: 20px;
-                font-weight: bold;
+                padding: 6px 16px;
+                border-radius: 25px;
+                font-weight: 600;
                 text-transform: uppercase;
+                font-size: 11px;
+                letter-spacing: 0.5px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
             }
             .status.pending {
-                background-color: #fff3cd;
-                color: #856404;
+                background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+                color: white;
+                border: 2px solid #d68910;
             }
             .status.completed {
-                background-color: #d4edda;
-                color: #155724;
+                background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+                color: white;
+                border: 2px solid #1e8449;
             }
             .status.cancelled {
-                background-color: #f8d7da;
-                color: #721c24;
+                background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+                color: white;
+                border: 2px solid #a93226;
+            }
+            .watermark {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%) rotate(-45deg);
+                font-size: 120px;
+                color: rgba(52, 73, 94, 0.03);
+                font-weight: 900;
+                z-index: -1;
+                pointer-events: none;
+                letter-spacing: 10px;
             }
         </style>
     </head>
     <body>
-        <div class="header">
-            <div>
-                ${logoBase64 ? `<img src="${logoBase64}" class="logo" alt="Company Logo">` : ''}
+                <div class="header">
+            <div class="company-section">
+                ${logoBase64 ? `<img src="${logoBase64}" alt="Company Logo" class="logo" />` : ''}
+                <div class="company-info">
+                    <h2>${invoice.companyName || 'Your Company Name'}</h2>
+                    <p><strong>Address:</strong> ${invoice.companyAddress || 'Company Address'}</p>
+                    <p><strong>Phone:</strong> ${invoice.companyPhone || 'Phone Number'}</p>
+                    ${invoice.companyEmail ? `<p><strong>Email:</strong> ${invoice.companyEmail}</p>` : ''}
+                    ${invoice.companyTaxId ? `<p><strong>Tax ID:</strong> ${invoice.companyTaxId}</p>` : ''}
+                </div>
             </div>
-            <div class="company-info">
-                <h2>${companyInfo.name}</h2>
-                <p>${companyInfo.address}</p>
-                ${companyInfo.phone ? `<p>Phone: ${companyInfo.phone}</p>` : ''}
+            <div class="invoice-meta">
+                <div style="margin-top: 15px; font-size: 14px; color: #5a6c7d;">
+                    <strong>Invoice Date:</strong><br>
+                    ${new Date().toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    })}
+                </div>
             </div>
         </div>
 
-        <h1 class="invoice-title">${invoice.invoiceType.toUpperCase()}</h1>
-        
+        <div class="watermark">INVOICE</div>
+
         <div class="invoice-header-info">
             <div>
                 <p><strong>Invoice Number:</strong> ${invoice.invoiceNumber || 'Not Assigned'}</p>
@@ -391,7 +556,6 @@ class PDFService {
             </div>
             <div style="text-align: right;">
                 <p><strong>Sale Type:</strong> ${saleTypeDesc}</p>
-                <p><strong>Status:</strong> <span class="status ${invoice.status}">${invoice.status}</span></p>
                 <p><strong>Generated:</strong> ${new Date().toLocaleDateString()}</p>
             </div>
         </div>
@@ -413,6 +577,12 @@ class PDFService {
                 <p><strong>Address:</strong> ${invoice.buyerAddress}</p>
                 <p><strong>Registration Type:</strong> ${invoice.buyerRegistrationType}</p>
             </div>
+        </div>
+
+        <div style="margin: 20px 0 10px 0;">
+            <h3 style="color: #2c3e50; font-size: 16px; font-weight: 600; margin: 0; padding: 8px 0; border-bottom: 2px solid #3498db; display: inline-block; letter-spacing: 0.5px;">
+                INVOICE ITEMS
+            </h3>
         </div>
 
         <table class="items-table">
@@ -462,6 +632,12 @@ class PDFService {
             </tbody>
         </table>
 
+        <div style="margin: 20px 0 10px 0;">
+            <h3 style="color: #2c3e50; font-size: 14px; font-weight: 600; margin: 0; padding: 8px 0; border-bottom: 2px solid #e74c3c; display: inline-block; letter-spacing: 0.5px;">
+                INVOICE SUMMARY
+            </h3>
+        </div>
+
         <div class="totals-section">
             <!-- FBR Section with Logo and QR Code -->
             <div class="fbr-section">
@@ -480,8 +656,12 @@ class PDFService {
         </div>
 
         <div class="footer">
-            <p>This is a computer-generated invoice and does not require a signature.</p>
-            <p>Generated on ${new Date().toLocaleString()}</p>
+            <div style="font-style: italic; margin-bottom: 10px;">This is a computer generated invoice and does not require a signature.</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #bdc3c7; padding-top: 15px; margin-top: 15px;">
+                <p style="margin: 0;">Generated on: ${new Date().toLocaleString()}</p>
+                <p style="margin: 0; font-weight: 600;">Invoice #${invoice.invoiceNumber}</p>
+            </div>
+        </div>
         </div>
     </body>
     </html>
