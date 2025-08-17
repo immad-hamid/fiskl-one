@@ -229,25 +229,31 @@ import { NotificationService } from '../../../core/services/notification.service
                       <span nz-icon nzType="eye"></span>
                     </button>
 
-                    <button 
-                      nz-button 
-                      nzType="link" 
-                      nzSize="small"
-                      (click)="editInvoice(invoice.id!)"
-                      nz-tooltip
-                      nzTooltipTitle="Edit">
-                      <span nz-icon nzType="edit"></span>
-                    </button>
+                    <!-- Edit button only for invoices that are not completed and posted -->
+                    @if (!(invoice.status === 'completed' && invoice.fbrStatus === 'posted')) {
+                      <button 
+                        nz-button 
+                        nzType="link" 
+                        nzSize="small"
+                        (click)="editInvoice(invoice.id!)"
+                        nz-tooltip
+                        nzTooltipTitle="Edit">
+                        <span nz-icon nzType="edit"></span>
+                      </button>
+                    }
 
-                    <button 
-                      nz-button 
-                      nzType="link" 
-                      nzSize="small"
-                      (click)="downloadPDF(invoice.id!)"
-                      nz-tooltip
-                      nzTooltipTitle="Download PDF">
-                      <span nz-icon nzType="download"></span>
-                    </button>
+                    <!-- Download button only for completed invoices with posted FBR status -->
+                    @if (invoice.status === 'completed' && invoice.fbrStatus === 'posted') {
+                      <button 
+                        nz-button 
+                        nzType="link" 
+                        nzSize="small"
+                        (click)="downloadPDF(invoice.id!)"
+                        nz-tooltip
+                        nzTooltipTitle="Download PDF">
+                        <span nz-icon nzType="download"></span>
+                      </button>
+                    }
 
                     <!-- Post button only for pending invoices with not-posted FBR status -->
                     @if (invoice.status === 'pending' && invoice.fbrStatus === 'not-posted') {
@@ -279,14 +285,17 @@ import { NotificationService } from '../../../core/services/notification.service
 
                     <nz-dropdown-menu #actionMenu="nzDropdownMenu">
                       <ul nz-menu>
-                        <li nz-menu-item 
-                            nz-popconfirm
-                            nzPopconfirmTitle="Are you sure you want to delete this invoice?"
-                            nzPopconfirmPlacement="topRight"
-                            (nzOnConfirm)="deleteInvoice(invoice.id!)">
-                          <span nz-icon nzType="delete" class="text-danger"></span>
-                          Delete
-                        </li>
+                        <!-- Delete option only for invoices that are not completed and posted -->
+                        @if (!(invoice.status === 'completed' && invoice.fbrStatus === 'posted')) {
+                          <li nz-menu-item 
+                              nz-popconfirm
+                              nzPopconfirmTitle="Are you sure you want to delete this invoice?"
+                              nzPopconfirmPlacement="topRight"
+                              (nzOnConfirm)="deleteInvoice(invoice.id!)">
+                            <span nz-icon nzType="delete" class="text-danger"></span>
+                            Delete
+                          </li>
+                        }
                       </ul>
                     </nz-dropdown-menu>
                   </div>

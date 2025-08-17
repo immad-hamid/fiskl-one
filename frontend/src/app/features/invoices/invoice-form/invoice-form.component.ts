@@ -333,6 +333,11 @@ export class InvoiceFormComponent implements OnInit, OnDestroy {
     );
   }
 
+  recalculateItemTotal(index: number): void {
+    // Same calculation as calculateItemTotal but with user confirmation
+    this.calculateItemTotal(index);
+  }
+
   getItemTotal(index: number): number {
     const item = this.itemsFormArray.at(index);
     return item.get('totalValues')?.value || 0;

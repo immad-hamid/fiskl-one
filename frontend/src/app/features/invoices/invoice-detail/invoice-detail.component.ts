@@ -46,14 +46,20 @@ import { NotificationService } from '../../../core/services/notification.service
       </div>
       @if (invoice) {
         <div class="header-actions">
-          <button nz-button (click)="editInvoice()">
-            <span nz-icon nzType="edit"></span>
-            Edit
-          </button>
-          <button nz-button nzType="primary" (click)="downloadPDF()">
-            <span nz-icon nzType="download"></span>
-            Download PDF
-          </button>
+          <!-- Edit button only for invoices that are not completed and posted -->
+          @if (!(invoice.status === 'completed' && invoice.fbrStatus === 'posted')) {
+            <button nz-button (click)="editInvoice()">
+              <span nz-icon nzType="edit"></span>
+              Edit
+            </button>
+          }
+          <!-- Download button only for completed invoices with posted FBR status -->
+          @if (invoice.status === 'completed' && invoice.fbrStatus === 'posted') {
+            <button nz-button nzType="primary" (click)="downloadPDF()">
+              <span nz-icon nzType="download"></span>
+              Download PDF
+            </button>
+          }
           <div
             nz-dropdown
             [nzDropdownMenu]="actionMenu"
@@ -74,15 +80,18 @@ import { NotificationService } from '../../../core/services/notification.service
               Mark Pending
             </li>
             <li nz-menu-divider></li>
-            <li
-              nz-menu-item
-              nz-popconfirm
-              nzPopconfirmTitle="Are you sure you want to delete this invoice?"
-              (nzOnConfirm)="deleteInvoice()"
-            >
-              <span nz-icon nzType="delete" class="text-danger"></span>
-              Delete Invoice
-            </li>
+            <!-- Delete option only for invoices that are not completed and posted -->
+            @if (!(invoice.status === 'completed' && invoice.fbrStatus === 'posted')) {
+              <li
+                nz-menu-item
+                nz-popconfirm
+                nzPopconfirmTitle="Are you sure you want to delete this invoice?"
+                (nzOnConfirm)="deleteInvoice()"
+              >
+                <span nz-icon nzType="delete" class="text-danger"></span>
+                Delete Invoice
+              </li>
+            }
           </ul>
         </nz-dropdown-menu>
         </div>

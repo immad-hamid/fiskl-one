@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { invoiceEditGuard } from '../../core/guards/invoice-edit.guard';
 
 export const INVOICE_ROUTES: Routes = [
   {
@@ -21,6 +22,7 @@ export const INVOICE_ROUTES: Routes = [
       import('./invoice-form/invoice-form.component').then(
         (m) => m.InvoiceFormComponent
       ),
+    canActivate: [invoiceEditGuard],
   },
   {
     path: 'detail/:id',

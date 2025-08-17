@@ -70,6 +70,17 @@ class InvoiceController {
 
   static async updateInvoice(req, res, next) {
     try {
+      // First, get the current invoice to check its status
+      const currentInvoice = await InvoiceService.getInvoiceById(req.params.id);
+      
+      // Check if invoice is completed and posted to FBR
+      if (currentInvoice.status === 'completed' && currentInvoice.fbrStatus === 'posted') {
+        return res.status(403).json({
+          success: false,
+          message: 'Cannot update invoice: Invoice has been posted to FBR and is locked for editing'
+        });
+      }
+
       const invoice = await InvoiceService.updateInvoice(req.params.id, req.body);
 
       res.json({
@@ -84,6 +95,17 @@ class InvoiceController {
 
   static async deleteInvoice(req, res, next) {
     try {
+      // First, get the current invoice to check its status
+      const currentInvoice = await InvoiceService.getInvoiceById(req.params.id);
+      
+      // Check if invoice is completed and posted to FBR
+      if (currentInvoice.status === 'completed' && currentInvoice.fbrStatus === 'posted') {
+        return res.status(403).json({
+          success: false,
+          message: 'Cannot delete invoice: Invoice has been posted to FBR and is locked for deletion'
+        });
+      }
+
       await InvoiceService.deleteInvoice(req.params.id);
 
       res.json({
@@ -152,9 +174,12 @@ class InvoiceController {
         fbrResponse: result.postResponse
       });
     } catch (error) {
-      res.status(400).json({
+      const statusCode = error.statusCode || 500;
+      res.status(statusCode).json({
         success: false,
-        message: error.message || 'Failed to post invoice to FBR'
+        message: error.message || 'Failed to post invoice to FBR',
+        fbrErrorCode: error.fbrErrorCode,
+        fbrStatus: error.fbrStatus
       });
     }
   }

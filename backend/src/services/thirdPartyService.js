@@ -33,8 +33,6 @@ class ThirdPartyService {
   static async validateInvoice(invoiceData) {
     const apiUrl = process.env.THIRD_PARTY_API_URL;
     const apiKey = process.env.THIRD_PARTY_API_KEY;
-    console.log(apiUrl);
-    console.log(apiKey);
     const isDevelopment = process.env.NODE_ENV === 'development';
 
     if (!apiUrl || !apiKey) {
@@ -67,8 +65,7 @@ class ThirdPartyService {
 
     try {
       const payload = this.formatInvoicePayload(invoiceData);
-      console.log(payload);
-      console.log(`${apiUrl}/fbr/validate-invoice`)
+      console.log('<--------------------------- API KEY ------------------------->>' + apiKey);
       const response = await axios.post(`${apiUrl}/fbr/validate-invoice`, payload, {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -77,11 +74,21 @@ class ThirdPartyService {
         timeout: 30000
       });
 
-      console.log(response);
+      console.log('<--------------------------- RESPONSE ------------------------->>' + response);
 
       return this.validateResponse(response.data);
     } catch (error) {
       console.error('Invoice validation error:', error.message);
+      
+      // Handle FBR API validation errors (when API returns 401 but with validation details)
+      if (error.response?.status === 401 && error.response?.data?.validationResponse) {
+        const validationError = error.response.data.validationResponse;
+        const fbrError = new Error(validationError.error || 'FBR validation failed');
+        fbrError.statusCode = 400; // Convert 401 to 400 for validation errors
+        fbrError.fbrErrorCode = validationError.errorCode;
+        fbrError.fbrStatus = validationError.status;
+        throw fbrError;
+      }
       
       // If we get a 404 in development, suggest using mock mode
       if (isDevelopment && error.response?.status === 404) {
@@ -135,6 +142,16 @@ class ThirdPartyService {
       return this.validateResponse(response.data);
     } catch (error) {
       console.error('Invoice posting error:', error.message);
+      
+      // Handle FBR API validation errors (when API returns 401 but with validation details)
+      if (error.response?.status === 401 && error.response?.data?.validationResponse) {
+        const validationError = error.response.data.validationResponse;
+        const fbrError = new Error(validationError.error || 'FBR posting failed');
+        fbrError.statusCode = 400; // Convert 401 to 400 for validation errors
+        fbrError.fbrErrorCode = validationError.errorCode;
+        fbrError.fbrStatus = validationError.status;
+        throw fbrError;
+      }
       
       // If we get a 404 in development, suggest using mock mode
       if (isDevelopment && error.response?.status === 404) {

@@ -302,8 +302,8 @@ class InvoiceService {
         fbrStatus: 'posted'
       };
 
-      // Update invoice number if it was not assigned and we got one from the response
-      if ((!invoice.invoiceNumber || invoice.invoiceNumber === 'Not Assigned') && postResponse.invoiceNumber) {
+      // Always update invoice number with FBR response invoice number
+      if (postResponse.invoiceNumber) {
         updateData.invoiceNumber = postResponse.invoiceNumber;
       }
 

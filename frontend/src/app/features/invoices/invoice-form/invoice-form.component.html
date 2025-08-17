@@ -427,9 +427,24 @@
 
             <div class="field field--total">
               <span class="field__label">Total Value</span>
-              <div class="total-display">
-                {{ getItemTotal($index) | number : "1.2-2" }}
-              </div>
+              <input
+                type="number"
+                class="field__input"
+                placeholder="Total Value"
+                formControlName="totalValues"
+                step="0.01"
+                min="0"
+              />
+              <button
+                type="button"
+                nz-button
+                nzType="link"
+                nzSize="small"
+                (click)="recalculateItemTotal($index)"
+                title="Recalculate based on other fields"
+              >
+                <span nz-icon nzType="calculator"></span>
+              </button>
             </div>
           </div>
         </div>
