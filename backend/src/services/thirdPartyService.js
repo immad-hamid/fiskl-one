@@ -64,8 +64,7 @@ class ThirdPartyService {
     }
 
     try {
-      const payload = this.formatInvoicePayload(invoiceData);
-      console.log('<--------------------------- API KEY ------------------------->>' + apiKey);
+      const payload = this.formatInvoicePayload(invoiceData);console.log(payload);
       const response = await axios.post(`${apiUrl}/fbr/validate-invoice`, payload, {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
@@ -78,8 +77,6 @@ class ThirdPartyService {
 
       return this.validateResponse(response.data);
     } catch (error) {
-      console.error('Invoice validation error:', error.message);
-      
       // Handle FBR API validation errors (when API returns 401 but with validation details)
       if (error.response?.status === 401 && error.response?.data?.validationResponse) {
         const validationError = error.response.data.validationResponse;
